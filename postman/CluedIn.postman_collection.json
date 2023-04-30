@@ -1,0 +1,1864 @@
+{
+	"info": {
+		"_postman_id": "1a4c0bf0-435d-479b-8e95-e2d42a26ee84",
+		"name": "CluedIn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1012355"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Connect",
+					"item": [
+						{
+							"name": "Get a Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"\r",
+											"postman.setEnvironmentVariable(\"access_token\", data.access_token);\r",
+											"postman.setEnvironmentVariable(\"refresh_token\", data.refresh_token);\r",
+											"\r",
+											"var base64 = responseBody.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');\r",
+											"var jwt = JSON.parse(\r",
+											"    decodeURIComponent(\r",
+											"        atob(base64)\r",
+											"            .split('')\r",
+											"            .map(char => '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2))\r",
+											"            .join('')));\r",
+											"postman.setEnvironmentVariable(\"organization_id\", jwt.OrganizationId);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "{{user}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{organization}}",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{auth}}/connect/token",
+									"host": [
+										"{{auth}}"
+									],
+									"path": [
+										"connect",
+										"token"
+									]
+								},
+								"description": "Requests a new JWT access token."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "API",
+					"item": [
+						{
+							"name": "Account",
+							"item": [
+								{
+									"name": "Check if an Organization Account is available",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth}}/api/account/available?clientId={{organization}}",
+											"host": [
+												"{{auth}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"available"
+											],
+											"query": [
+												{
+													"key": "clientId",
+													"value": "{{organization}}"
+												}
+											]
+										},
+										"description": "Checks, if an organization account (tenant) with a given name is available."
+									},
+									"response": []
+								},
+								{
+									"name": "Create an Organization Account",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "x-cluedin-newaccountaccesskey",
+												"value": "{{newaccountaccesskey}}",
+												"description": "Used in Kubernetes to protect the endpoint. See `cluedin-new-organization-access-key` secret.",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "username",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "confirmpassword",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "organizationName",
+													"value": "{{organization}}",
+													"type": "text"
+												},
+												{
+													"key": "applicationSubDomain",
+													"value": "{{organization}}",
+													"type": "text"
+												},
+												{
+													"key": "emailDomain",
+													"value": "{{domain}}",
+													"type": "text"
+												},
+												{
+													"key": "grant_type",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "allowEmailDomainSignup",
+													"value": "true",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{auth}}/api/account/new",
+											"host": [
+												"{{auth}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"new"
+											]
+										},
+										"description": "Creates a new Organization Account."
+									},
+									"response": []
+								},
+								{
+									"name": "Get an Invite Code",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth}}/api/account/invitationcode?email={{user}}",
+											"host": [
+												"{{auth}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"invitationcode"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "{{user}}"
+												}
+											]
+										},
+										"description": "Requests an invite code for a given email."
+									},
+									"response": []
+								},
+								{
+									"name": "Create a User",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "grant_type",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "confirmpassword",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "applicationSubDomain",
+													"value": "{{organization}}",
+													"type": "text"
+												},
+												{
+													"key": "clientid",
+													"value": "{{organization}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{auth}}/api/account/register?code={{invite_code))",
+											"host": [
+												"{{auth}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"register"
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "{{invite_code))",
+													"description": "Uppercased MD5 of the user's email."
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get current User",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth}}/api/account/user",
+											"host": [
+												"{{auth}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"user"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "GraphQL",
+			"item": [
+				{
+					"name": "Actions",
+					"item": [
+						{
+							"name": "Delete Entities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"cursor\", response.data.search.cursor);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: DATE) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Entities with Paging",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"cursor\", response.data.search.cursor);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query deleteEntities($cursor: PagingCursor) {\r\n  search(\r\n    query: \"entityType:{{entity_type}}\"\r\n    sort: DATE\r\n    cursor: $cursor\r\n    pageSize: 10000\r\n  ) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n          deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": "{\n  \"cursor\": \"{{cursor}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Process Entities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"cursor\", response.data.search.cursor);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: DATE) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        postProcess\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Entity",
+					"item": [
+						{
+							"name": "Get Entity by Id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n  entity(id:\"{{entity_id}}\")\r\n  {\r\n    id\r\n    name\r\n    entityType\r\n    properties\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Edges",
+					"item": [
+						{
+							"name": "Get Edge summary",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getEdgeSummary($id: ID!) {\r\n  virtualization {\r\n    entityEdgeSummary(id: $id) {\r\n      id\r\n      type\r\n      name\r\n      icon\r\n      route\r\n      displayName\r\n      attributeOrigin\r\n      codes\r\n      edges {\r\n        edgeType\r\n        direction\r\n        entityType\r\n        entityId\r\n        icon\r\n        route\r\n        name\r\n        attributeOrigin\r\n        codes\r\n        createdDate\r\n        isGrouped\r\n        entityCount\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"id\": \"{{entity_id}}\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{graphql}}",
+									"host": [
+										"{{graphql}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Metrics",
+					"item": [
+						{
+							"name": "Get Metrics By Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query metricsByNameQuery($names: [String]) {\r\n  metrics: metrics(names: $names) {\r\n    name\r\n    id\r\n    dataType\r\n    categories\r\n    globalDimensions {\r\n      id\r\n      type\r\n      detailType\r\n      detail\r\n      providerDefinitionId\r\n      providerId\r\n      providerName\r\n      latestValue\r\n      values\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"names\": [\"accuracy\"]\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Metrics",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query metricsByNameQuery($names: [String]) {\r\n  metrics: metrics(names: $names) {\r\n    name\r\n    id\r\n    dataType\r\n    categories\r\n    globalDimensions {\r\n      id\r\n      type\r\n      detailType\r\n      detail\r\n      providerDefinitionId\r\n      providerId\r\n      providerName\r\n      latestValue\r\n      values\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"names\": []\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Search Entities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n  search (query:\"entityType:{{entity_type}}\" pageSize: 1000 )\r\n  {\r\n    entries\r\n    {\r\n\t    id\r\n        name\r\n        entityType\r\n        properties\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search with Edge Summary",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n  search(query: \"entityType:{{entity_id}}\", pageSize: 10) {\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      edgesSummary\r\n      edges: edges {\r\n        outgoingOfType(entityType: \"/Organization\", edgeType: \"/WorksIn\") {\r\n          entries {\r\n            id\r\n            name\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Streams",
+					"item": [
+						{
+							"name": "Test Connection",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation testConnection($providerId: ID, $connection: JSON) {\r\n  inbound {\r\n    testConnection(providerId: $providerId, connection: $connection) {\r\n      success\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"providerId\": \"838e4ea2-80e0-4b60-b1d1-f052bfcd0caf\",\r\n  \"connection\": {\r\n    \"host\": \"sqlserver\",\r\n    \"databaseName\": \"DataStore.Db.WebApp\",\r\n    \"username\": \"sa\",\r\n    \"password\": \"yourStrong(!)Password\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create an Export Target",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createConnection($connectorId: ID, $authInfo: JSON) {\r\n  inbound {\r\n    createConnection(connectorId: $connectorId, authInfo: $authInfo) {\r\n      id\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"connectorId\": \"838e4ea2-80e0-4b60-b1d1-f052bfcd0caf\",\r\n  \"authInfo\": {\r\n    \"host\": \"sqlserver\",\r\n    \"databaseName\": \"DataStore.Db.WebApp\",\r\n    \"username\": \"sa\",\r\n    \"password\": \"yourStrong(!)Password\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update an Export Target",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation saveConnectorConfiguration(\r\n  $connectorConfiguration: InputConnectorConfiguration\r\n) {\r\n  inbound {\r\n    saveConnectorConfiguration(\r\n      connectorConfiguration: $connectorConfiguration\r\n    ) {\r\n      id\r\n      helperConfiguration\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"connectorConfiguration\": {\r\n    \"id\": \"9031ee34-ce71-4dfe-b89b-673c5f37cbdd\",\r\n    \"name\": \"Sql Server Connector\",\r\n    \"accountDisplay\": \"sqlserver.DataStore.Db.WebApp\",\r\n    \"accountId\": \"sqlserver.DataStore.Db.WebApp\",\r\n    \"active\": true,\r\n    \"autoSync\": false,\r\n    \"codeName\": \"SqlServerConnector\",\r\n    \"configuration\": {\r\n      \"host\": \"sqlserver\",\r\n      \"databaseName\": \"DataStore.Db.WebApp\",\r\n      \"username\": \"sa\"\r\n    },\r\n    \"createdDate\": \"2023-03-16T12:38:29.2243902+00:00\",\r\n    \"entityId\": \"c855d6e8-8feb-5b82-8ae1-4496441e36ff\",\r\n    \"failingAuthentication\": false,\r\n    \"guide\": null,\r\n    \"helperConfiguration\": {\r\n      \"host\": \"sqlserver\",\r\n      \"databaseName\": \"DataStore.Db.WebApp\",\r\n      \"username\": \"sa\",\r\n      \"password\": \"yourStrong(!)Password\",\r\n      \"portNumber\": \"1433\"\r\n    },\r\n    \"providerId\": \"838e4ea2-80e0-4b60-b1d1-f052bfcd0caf\",\r\n    \"reAuthEndpoint\": null,\r\n    \"source\": \"\",\r\n    \"sourceQuality\": 5,\r\n    \"stats\": null,\r\n    \"supportsAutomaticWebhookCreation\": false,\r\n    \"supportsConfiguration\": false,\r\n    \"supportsWebhooks\": false,\r\n    \"userId\": \"893b31c6-1a41-46a4-9643-122bd5567658\",\r\n    \"userName\": \"admin@foobar.com\",\r\n    \"webhookManagementEndpoints\": null,\r\n    \"webhooks\": null\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createStream($stream: InputCreateStream!) {\r\n  consume {\r\n    id\r\n    createStream(stream: $stream) {\r\n      ...Stream\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment Stream on Stream {\r\n  id\r\n  name\r\n  isActive\r\n  createdBy\r\n  modifiedBy\r\n  type\r\n  modifiedAt\r\n  createdAt\r\n  ownedBy\r\n  condition\r\n  rules\r\n  numberOfRecords\r\n  rulesApplied\r\n  containerName\r\n  mode\r\n  exportOutgoingEdges\r\n  exportIncomingEdges\r\n  author {\r\n    id\r\n    username\r\n    __typename\r\n  }\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"stream\": {\r\n    \"name\": \"Foo Stream\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Save a Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation saveStream($stream: InputStream!) {\r\n  consume {\r\n    id\r\n    saveStream(stream: $stream) {\r\n      ...Stream\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment Stream on Stream {\r\n  id\r\n  name\r\n  isActive\r\n  createdBy\r\n  modifiedBy\r\n  type\r\n  modifiedAt\r\n  createdAt\r\n  ownedBy\r\n  condition\r\n  rules\r\n  numberOfRecords\r\n  rulesApplied\r\n  containerName\r\n  mode\r\n  exportOutgoingEdges\r\n  exportIncomingEdges\r\n  author {\r\n    id\r\n    username\r\n    __typename\r\n  }\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"stream\": {\r\n    \"id\": \"a41d817c-9352-420d-a481-831ece336190\",\r\n    \"name\": \"Foo Stream\",\r\n    \"description\": null,\r\n    \"ownedBy\": \"893b31c6-1a41-46a4-9643-122bd5567658\",\r\n    \"modifiedBy\": null,\r\n    \"createdBy\": \"893b31c6-1a41-46a4-9643-122bd5567658\",\r\n    \"isActive\": false,\r\n    \"condition\": {\r\n      \"objectTypeId\": \"00000000-0000-0000-0000-000000000000\",\r\n      \"condition\": \"AND\",\r\n      \"field\": null,\r\n      \"id\": \"3527c6e3-6023-4c30-aab0-e303c5dbbbbb\",\r\n      \"operator\": \"00000000-0000-0000-0000-000000000000\",\r\n      \"rules\": [\r\n        {\r\n          \"condition\": \"AND\",\r\n          \"field\": \"EntityType\",\r\n          \"objectTypeId\": \"3be85371-cbe0-4180-8820-73e6e37a6c32\",\r\n          \"operator\": \"0bafc522-8011-43ba-978a-babe222ba466\",\r\n          \"value\": [\r\n            \"/Infrastructure/User\"\r\n          ],\r\n          \"type\": \"string\"\r\n        }\r\n      ],\r\n      \"type\": null,\r\n      \"value\": null\r\n    },\r\n    \"rules\": []\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getStream($id: ID!) {\r\n  consume {\r\n    id\r\n    stream(id: $id) {\r\n      ...Stream\r\n      description\r\n      connector {\r\n        id\r\n        name\r\n        accountDisplay\r\n        streamModes\r\n        connector {\r\n          id\r\n          name\r\n          icon\r\n          streamModes\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      mappingConfiguration\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment Stream on Stream {\r\n  id\r\n  name\r\n  isActive\r\n  createdBy\r\n  modifiedBy\r\n  type\r\n  modifiedAt\r\n  createdAt\r\n  ownedBy\r\n  condition\r\n  rules\r\n  numberOfRecords\r\n  rulesApplied\r\n  containerName\r\n  mode\r\n  exportOutgoingEdges\r\n  exportIncomingEdges\r\n  author {\r\n    id\r\n    username\r\n    __typename\r\n  }\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"id\": \"a41d817c-9352-420d-a481-831ece336190\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Stream Mapping Properties",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getStreamMappingProperties {\r\n  consume {\r\n    id\r\n    streamMappingProperties {\r\n      displayName\r\n      key\r\n      type\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Stream Configuration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query connectorConfigurationById($id: ID) {\r\n  inbound {\r\n    id\r\n    connectorConfiguration(id: $id) {\r\n      id\r\n      name\r\n      accountDisplay\r\n      accountId\r\n      active\r\n      autoSync\r\n      codeName\r\n      configuration\r\n      connector {\r\n        id\r\n        icon\r\n        name\r\n        authMethods\r\n        properties\r\n        streamModes\r\n        __typename\r\n      }\r\n      createdDate\r\n      entityId\r\n      failingAuthentication\r\n      guide\r\n      helperConfiguration\r\n      providerId\r\n      reAuthEndpoint\r\n      source\r\n      sourceQuality\r\n      stats\r\n      status\r\n      supportsAutomaticWebhookCreation\r\n      supportsConfiguration\r\n      supportsWebhooks\r\n      userId\r\n      userName\r\n      users {\r\n        id\r\n        username\r\n        roles\r\n        __typename\r\n      }\r\n      webhookManagementEndpoints\r\n      webhooks\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"id\": \"9031ee34-ce71-4dfe-b89b-673c5f37cbdd\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Setup Export Target for Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation setupConnectorStream($streamId: ID!, $exportConfiguration: InputExportConfiguration) {\r\n  consume {\r\n    id\r\n    setupConnectorStream(\r\n      streamId: $streamId\r\n      exportConfiguration: $exportConfiguration\r\n    ) {\r\n      id\r\n      containerName\r\n      mode\r\n      exportOutgoingEdges\r\n      exportIncomingEdges\r\n      connector {\r\n        id\r\n        name\r\n        accountDisplay\r\n        connector {\r\n          id\r\n          name\r\n          icon\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      mappingConfiguration\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"streamId\": \"a41d817c-9352-420d-a481-831ece336190\",\r\n  \"exportConfiguration\": {\r\n    \"connectorProviderDefinitionId\": \"9031ee34-ce71-4dfe-b89b-673c5f37cbdd\",\r\n    \"containerName\": \"FooTest\",\r\n    \"mode\": \"Sync\",\r\n    \"exportOutgoingEdges\": false,\r\n    \"exportIncomingEdges\": false,\r\n    \"dataTypes\": [\r\n      {\r\n        \"key\": \"Name\",\r\n        \"type\": \"metadata\"\r\n      },\r\n      {\r\n        \"key\": \"user.email\",\r\n        \"type\": \"vocabkey\"\r\n      }\r\n    ]\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activate Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation activateStream($streamId: ID!) {\r\n  consume {\r\n    id\r\n    activateStream(streamId: $streamId) {\r\n      ...Stream\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment Stream on Stream {\r\n  id\r\n  name\r\n  isActive\r\n  createdBy\r\n  modifiedBy\r\n  type\r\n  modifiedAt\r\n  createdAt\r\n  ownedBy\r\n  condition\r\n  rules\r\n  numberOfRecords\r\n  rulesApplied\r\n  containerName\r\n  mode\r\n  exportOutgoingEdges\r\n  exportIncomingEdges\r\n  author {\r\n    id\r\n    username\r\n    __typename\r\n  }\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"streamId\": \"a41d817c-9352-420d-a481-831ece336190\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate Stream",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation deactivateStream($streamId: ID!) {\r\n  consume {\r\n    id\r\n    deActivateStream(streamId: $streamId) {\r\n      ...Stream\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment Stream on Stream {\r\n  id\r\n  name\r\n  isActive\r\n  createdBy\r\n  modifiedBy\r\n  type\r\n  modifiedAt\r\n  createdAt\r\n  ownedBy\r\n  condition\r\n  rules\r\n  numberOfRecords\r\n  rulesApplied\r\n  containerName\r\n  mode\r\n  exportOutgoingEdges\r\n  exportIncomingEdges\r\n  author {\r\n    id\r\n    username\r\n    __typename\r\n  }\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"streamId\": \"a41d817c-9352-420d-a481-831ece336190\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org}}/graphql",
+									"host": [
+										"{{org}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tokens",
+					"item": [
+						{
+							"name": "Create a Token",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createToken($token: ApiTokenInput!) {\r\n  administration {\r\n    id\r\n    createToken(token: $token) {\r\n      name\r\n      accessToken\r\n      id\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n",
+										"variables": "{\r\n  \"token\": {\r\n    \"name\": \"{{token_name}}\",\r\n    \"expiredInHours\": 732\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{graphql}}",
+									"host": [
+										"{{graphql}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Tokens",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getApiTokens {\r\n  administration {\r\n    id\r\n    apiTokens {\r\n      name\r\n      accessToken\r\n      id\r\n      expiryDate\r\n      expiresInDays\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{graphql}}",
+									"host": [
+										"{{graphql}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Layout",
+					"item": [
+						{
+							"name": "Entity Type Layout Configuration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query entityTypeLayoutConfiguration($entityType: ID!) {\r\n  management {\r\n    id\r\n    entityTypeConfiguration(entityType: $entityType) {\r\n      ...EntityTypeConfiguration\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n\r\nfragment EntityTypeConfiguration on EntityTypeLayoutConfiguration {\r\n  active\r\n  displayName\r\n  entityType\r\n  icon\r\n  id\r\n  layoutConfiguration\r\n  pageTemplateId\r\n  path\r\n  route\r\n  template\r\n  type\r\n  __typename\r\n}",
+										"variables": "{\r\n  \"entityType\": {{entity_type}}\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{graphql}}",
+									"host": [
+										"{{graphql}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Rules",
+					"item": [
+						{
+							"name": "Get all Rules",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getRules(\r\n\t$searchName: String\r\n\t$isActive: Boolean\r\n\t$pageNumber: Int\r\n\t$sortBy: String\r\n\t$sortDirection: String\r\n) {\r\n\tmanagement {\r\n\t\tid\r\n\t\trules(\r\n\t\t\tsearchName: $searchName\r\n\t\t\tisActive: $isActive\r\n\t\t\tpageNumber: $pageNumber\r\n\t\t\tsortBy: $sortBy\r\n\t\t\tsortDirection: $sortDirection\r\n\t\t) {\r\n\t\t\ttotal\r\n\t\t\tdata {\r\n\t\t\t\tid\r\n\t\t\t\tname\r\n\t\t\t\torder\r\n\t\t\t\tdescription\r\n\t\t\t\tisActive\r\n\t\t\t\tcreatedBy\r\n\t\t\t\tmodifiedBy\r\n\t\t\t\townedBy\r\n\t\t\t\tcreatedAt\r\n\t\t\t\tmodifiedAt\r\n\t\t\t\tauthor {\r\n\t\t\t\t\tid\r\n\t\t\t\t\tusername\r\n\t\t\t\t\t__typename\r\n\t\t\t\t}\r\n\t\t\t\t__typename\r\n\t\t\t}\r\n\t\t\t__typename\r\n\t\t}\r\n\t\t__typename\r\n\t}\r\n}\r\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{graphql}}",
+									"host": [
+										"{{graphql}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Entity",
+					"item": [
+						{
+							"name": "Get an Entity by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entity?id={{entity_id}}&full=true",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entity"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										},
+										{
+											"key": "full",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Entity Relations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entity/relations?id={{entity_id}}&relationship={{edge_type}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entity",
+										"relations"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										},
+										{
+											"key": "relationship",
+											"value": "{{edge_type}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Entity Edges",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entityedges?id={{entity_id}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entityedges"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "v1",
+					"item": [
+						{
+							"name": "Entity",
+							"item": [
+								{
+									"name": "Get Schema",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/v1/entity/schema/",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"entity",
+												"schema",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Vocabs",
+							"item": [
+								{
+									"name": "Get Vocabularies by Key Names",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/v1/vocabs/key/getbykeynames?keyNames={{vocabulary_key_0}}&keyNames={{vocabulary_key_1}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"vocabs",
+												"key",
+												"getbykeynames"
+											],
+											"query": [
+												{
+													"key": "keyNames",
+													"value": "{{vocabulary_key_0}}"
+												},
+												{
+													"key": "keyNames",
+													"value": "{{vocabulary_key_1}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Vocabulary Keys by Vocabulary Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/vocabs/:vocabulary_id/keys",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"vocabs",
+												":vocabulary_id",
+												"keys"
+											],
+											"variable": [
+												{
+													"key": "vocabulary_id",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "v2",
+					"item": [
+						{
+							"name": "Organization",
+							"item": [
+								{
+									"name": "Providers",
+									"item": [
+										{
+											"name": "Pause / Play a Crawler",
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"url": {
+													"raw": "{{api}}/organization/providers?id={{provider_id}}&active=true&AccountId={{account_id}}",
+													"host": [
+														"{{api}}"
+													],
+													"path": [
+														"organization",
+														"providers"
+													],
+													"query": [
+														{
+															"key": "id",
+															"value": "{{provider_id}}",
+															"description": "The ProviderId can be fount in the OpenCommunication.Provider table."
+														},
+														{
+															"key": "active",
+															"value": "true"
+														},
+														{
+															"key": "AccountId",
+															"value": "{{account_id}}",
+															"description": "The AccountId is visible in UI as the integration configuration's name."
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Organization",
+					"item": [
+						{
+							"name": "Metrics",
+							"item": [
+								{
+									"name": "Run Metrics",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/organization/metrics",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"organization",
+												"metrics"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get Global Security Filter Setting",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/organization/securityfilter/{{organization_id}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"organization",
+										"securityfilter",
+										"{{organization_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Commands",
+							"item": [
+								{
+									"name": "Process",
+									"item": [
+										{
+											"name": "All",
+											"item": [
+												{
+													"name": "EntityType",
+													"item": [
+														{
+															"name": "Process All by Entity Type",
+															"request": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "",
+																		"value": "",
+																		"type": "text",
+																		"disabled": true
+																	}
+																],
+																"url": {
+																	"raw": "{{api}}/admin/commands/process/all/?organizationId={{organization_id}}&entityType={{entity_type}}&minsize=0",
+																	"host": [
+																		"{{api}}"
+																	],
+																	"path": [
+																		"admin",
+																		"commands",
+																		"process",
+																		"all",
+																		""
+																	],
+																	"query": [
+																		{
+																			"key": "organizationId",
+																			"value": "{{organization_id}}"
+																		},
+																		{
+																			"key": "entityType",
+																			"value": "{{entity_type}}"
+																		},
+																		{
+																			"key": "minsize",
+																			"value": "0"
+																		}
+																	]
+																}
+															},
+															"response": []
+														},
+														{
+															"name": "Process Entity",
+															"request": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "",
+																		"value": "",
+																		"type": "text",
+																		"disabled": true
+																	}
+																],
+																"url": {
+																	"raw": "{{api}}/admin/commands/process/entity/?organizationId={{organization_id}}&id={{entity_id}}&minsize=0",
+																	"host": [
+																		"{{api}}"
+																	],
+																	"path": [
+																		"admin",
+																		"commands",
+																		"process",
+																		"entity",
+																		""
+																	],
+																	"query": [
+																		{
+																			"key": "organizationId",
+																			"value": "{{organization_id}}"
+																		},
+																		{
+																			"key": "id",
+																			"value": "{{entity_id}}"
+																		},
+																		{
+																			"key": "minsize",
+																			"value": "0"
+																		}
+																	]
+																}
+															},
+															"response": []
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Metrics",
+											"item": [
+												{
+													"name": "Entity",
+													"item": [
+														{
+															"name": "All",
+															"item": [
+																{
+																	"name": "Process All Metrics",
+																	"request": {
+																		"method": "GET",
+																		"header": [],
+																		"url": {
+																			"raw": "{{api}}/admin/commands/process/metrics/entity/all/?organizationId={{organization_id}}&minsize=0",
+																			"host": [
+																				"{{api}}"
+																			],
+																			"path": [
+																				"admin",
+																				"commands",
+																				"process",
+																				"metrics",
+																				"entity",
+																				"all",
+																				""
+																			],
+																			"query": [
+																				{
+																					"key": "organizationId",
+																					"value": "{{organization_id}}"
+																				},
+																				{
+																					"key": "minsize",
+																					"value": "0"
+																				}
+																			]
+																		}
+																	},
+																	"response": []
+																},
+																{
+																	"name": "Process Metrics by Entity Type",
+																	"request": {
+																		"method": "GET",
+																		"header": [],
+																		"url": {
+																			"raw": "{{api}}/admin/commands/process/metrics/entity/all/entityType/?organizationId={{organization_id}}&entityType={{entity_id}}&minsize=0",
+																			"host": [
+																				"{{api}}"
+																			],
+																			"path": [
+																				"admin",
+																				"commands",
+																				"process",
+																				"metrics",
+																				"entity",
+																				"all",
+																				"entityType",
+																				""
+																			],
+																			"query": [
+																				{
+																					"key": "organizationId",
+																					"value": "{{organization_id}}"
+																				},
+																				{
+																					"key": "entityType",
+																					"value": "{{entity_id}}"
+																				},
+																				{
+																					"key": "minsize",
+																					"value": "0"
+																				}
+																			]
+																		}
+																	},
+																	"response": []
+																}
+															]
+														},
+														{
+															"name": "Process Entity Metrics",
+															"request": {
+																"method": "GET",
+																"header": [],
+																"url": {
+																	"raw": "{{api}}/admin/commands/process/metrics/entity/?organizationId={{organization_id}}&id={{entity_id}}",
+																	"host": [
+																		"{{api}}"
+																	],
+																	"path": [
+																		"admin",
+																		"commands",
+																		"process",
+																		"metrics",
+																		"entity",
+																		""
+																	],
+																	"query": [
+																		{
+																			"key": "organizationId",
+																			"value": "{{organization_id}}"
+																		},
+																		{
+																			"key": "id",
+																			"value": "{{entity_id}}"
+																		}
+																	]
+																}
+															},
+															"response": []
+														},
+														{
+															"name": "Explain Entity Metrics",
+															"request": {
+																"method": "GET",
+																"header": [],
+																"url": {
+																	"raw": "{{api}}/admin/commands/process/metrics/entity/explain?organizationId={{organization_id}}&id={{entity_id}}",
+																	"host": [
+																		"{{api}}"
+																	],
+																	"path": [
+																		"admin",
+																		"commands",
+																		"process",
+																		"metrics",
+																		"entity",
+																		"explain"
+																	],
+																	"query": [
+																		{
+																			"key": "organizationId",
+																			"value": "{{organization_id}}"
+																		},
+																		{
+																			"key": "id",
+																			"value": "{{entity_id}}"
+																		}
+																	]
+																}
+															},
+															"response": []
+														},
+														{
+															"name": "Archive Entity Metrics",
+															"request": {
+																"method": "GET",
+																"header": [],
+																"url": {
+																	"raw": "{{api}}/admin/commands/archive/metrics/entity/?organizationId={{organization_id}}",
+																	"host": [
+																		"{{api}}"
+																	],
+																	"path": [
+																		"admin",
+																		"commands",
+																		"archive",
+																		"metrics",
+																		"entity",
+																		""
+																	],
+																	"query": [
+																		{
+																			"key": "organizationId",
+																			"value": "{{organization_id}}"
+																		}
+																	]
+																}
+															},
+															"response": []
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get an Entity Blob",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/admin/entity/blob/?id={{entity_id}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"admin",
+								"entity",
+								"blob",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{entity_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Configuration",
+			"item": [
+				{
+					"name": "Get Active Providers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/configuration/providers",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"configuration",
+								"providers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Provider Configuration by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/configuration/providers?id={{provider_id}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"configuration",
+								"providers"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{provider_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Providers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/configuration/inactiveproviders",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"configuration",
+								"inactiveproviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Provider by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/configuration/inactiveproviders?id={{provider_id}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"configuration",
+								"inactiveproviders"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{provider_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Providers List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/configuration/providerlist",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"configuration",
+								"providerlist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upload",
+			"item": [
+				{
+					"name": "API",
+					"item": [
+						{
+							"name": "Endpoint",
+							"item": [
+								{
+									"name": "Endpoint ingestion",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{api_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\r\n    {\r\n        \"name\": \"Roman\",\r\n        \"lastName\": \"Klimenko\",\r\n        \"email\": \"rok@cluedin.com\"\r\n    },\r\n    {\r\n        \"name\": \"Tim\",\r\n        \"lastName\": \"Ward\",\r\n        \"email\": \"tiw@cluedin.com\"\r\n    }\r\n]",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://127.0.0.1.nip.io:8888/upload/api/endpoint/:endpoint_id",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1",
+												"nip",
+												"io"
+											],
+											"port": "8888",
+											"path": [
+												"upload",
+												"api",
+												"endpoint",
+												":endpoint_id"
+											],
+											"variable": [
+												{
+													"key": "endpoint_id",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "v1",
+					"item": [
+						{
+							"name": "Post to a Webhook",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Token",
+										"value": "qwerty123",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n  {\r\n    \"name\": \"Huey Duck\",\r\n    \"father\": \"?\",\r\n    \"mother\": \"Della Duck\"\r\n  },\r\n  {\r\n    \"name\": \"Dewey Duck\",\r\n    \"father\": \"?\",\r\n    \"mother\": \"Della Duck\"\r\n  },\r\n  {\r\n    \"name\": \"Louie Duck\",\r\n    \"father\": \"?\",\r\n    \"mother\": \"Della Duck\"\r\n  },\r\n  {\r\n    \"name\": \"Della Duck\",\r\n    \"father\": \"Quackmore Duck\",\r\n    \"mother\": \"Hortense McDuck\"\r\n  },\r\n  {\r\n    \"name\": \"Donald Duck\",\r\n    \"father\": \"Quackmore Duck\",\r\n    \"mother\": \"Hortense McDuck\"\r\n  },\r\n  {\r\n    \"name\": \"Scrooge McDuck\",\r\n    \"father\": \"Fergus McDuck\",\r\n    \"mother\": \"Downy O'Drake\"\r\n  },\r\n  {\r\n    \"name\": \"Matilda McDuck\",\r\n    \"father\": \"Fergus McDuck\",\r\n    \"mother\": \"Downy O'Drake\"\r\n  },\r\n  {\r\n    \"name\": \"Hortense McDuck\",\r\n    \"father\": \"Fergus McDuck\",\r\n    \"mother\": \"Downy O'Drake\"\r\n  },\r\n  {\r\n    \"name\": \"Fergus McDuck\",\r\n    \"father\": \"Dingus McDuck\",\r\n    \"mother\": \"Molly Mallard\"\r\n  },\r\n  {\r\n    \"name\": \"Jake McDuck\",\r\n    \"father\": \"Dingus McDuck\",\r\n    \"mother\": \"Molly Mallard\"\r\n  },\r\n  {\r\n    \"name\": \"Angus McDuck\",\r\n    \"father\": \"Dingus McDuck\",\r\n    \"mother\": \"Molly Mallard\"\r\n  }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1.nip.io:9006/services/v1/:account_id/:provider_definition_id/:signature",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1",
+										"nip",
+										"io"
+									],
+									"port": "9006",
+									"path": [
+										"services",
+										"v1",
+										":account_id",
+										":provider_definition_id",
+										":signature"
+									],
+									"variable": [
+										{
+											"key": "account_id",
+											"value": null
+										},
+										{
+											"key": "provider_definition_id",
+											"value": null
+										},
+										{
+											"key": "signature",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
