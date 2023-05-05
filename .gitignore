@@ -1,1 +1,3 @@
 .DS_Store
+cluedin/dist/*
+__pycache__
