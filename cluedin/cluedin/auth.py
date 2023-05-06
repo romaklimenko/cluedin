@@ -1,4 +1,5 @@
 import requests
+from .urls import get_auth_url
 
 
 def get_token_response(context):
@@ -12,7 +13,7 @@ def get_token_response(context):
         'grant_type': 'password'
     }
     response = requests.post(
-        url=f'{context["protocol"]}://{context["organization"]}.{context["domain"]}/auth/connect/token',
+        url=f'{get_auth_url(context)}/connect/token',
         headers=headers,
         data=data)
     return response.json()
