@@ -1,18 +1,21 @@
-from cluedin import load_token_into_context
+import os
+import cluedin
 
 
 class TestAuth:
     def test_load_token_into_context(self):
-        context = {
-            "protocol": "http", # default - `https`
-            "domain": "cluedin.local",
-            "organization": "foobar",
-            "user": "admin@foobar.com",
-            "password": "Foobar23!"
-        }
+        # context = {
+        #     "protocol": "http", # default - `https`
+        #     "domain": "cluedin.local",
+        #     "organization": "foobar",
+        #     "user": "admin@foobar.com",
+        #     "password": "Foobar23!"
+        # }
+
+        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
 
         assert 'access_token' not in context
 
-        load_token_into_context(context)
+        cluedin.load_token_into_context(context)
 
         assert len(context['access_token']) > 0
