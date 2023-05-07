@@ -95,3 +95,39 @@ class TestGql:
             assert 'entityType' in entry
 
         assert len(entries) == 14
+
+    def test_actions(self):
+        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
+        cluedin.load_token_into_context(context)
+
+        query = """
+            query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
+              search(query: $query, sort: DATE, cursor: $cursor, pageSize: $pageSize) {
+                totalResults
+                cursor
+                entries {
+                  id
+                  name
+                  entityType
+                  actions {
+                    postProcess
+                  }
+                }
+              }
+            }
+        """
+
+        variables = {
+            "query": "entityType:/Person",
+            "pageSize": 5
+        }
+
+        entries = []
+
+        for entry in cluedin.gql.entries(context, query, variables):
+            entries.append(entry)
+            assert 'id' in entry
+            assert 'name' in entry
+            assert 'entityType' in entry
+
+        assert len(entries) == 11
