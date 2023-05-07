@@ -1,9 +1,14 @@
 [tool.poetry]
 name = "cluedin"
-version = "0.1.1"
-description = ""
+version = "1.0.0"
+description = "A Python client for CluedIn API."
 authors = ["Roman Klimenko <romaklimenko@gmail.com>"]
 readme = "README.md"
+license = "MIT"
+keywords = ["cluedin", "mdm", "master data management"]
+maintainers = ["Roman Klimenko <romaklimenko@gmail.com>"]
+homepage = "https://github.com/romaklimenko/cluedin"
+repository = "https://github.com/romaklimenko/cluedin"
 
 [tool.poetry.dependencies]
 python = "^3.7"
