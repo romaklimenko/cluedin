@@ -23,3 +23,19 @@ def gql(context, query, variables={}):
         })
 
     return response.json()
+
+
+def entries(context, query, variables):
+    response = gql(context, query, variables)
+    while ('data' in response and
+           'search' in response['data'] and
+           'cursor' in response['data']['search'] and
+            'entries' in response['data']['search']):
+        cursor = response['data']['search']['cursor']
+        entries = response['data']['search']['entries']
+        if len(entries) == 0:
+            return
+        for entry in entries:
+            yield entry
+        variables['cursor'] = cursor
+        response = gql(context, query, variables)
