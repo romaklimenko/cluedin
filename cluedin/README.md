@@ -7,13 +7,11 @@
 * calling CluedIn GraphQL API
 
 The use is pretty simple. First, install it from [PyPi](https://pypi.org/project/cluedin/):
-
 ```shell
 pip install cluedin
 ```
 
 Next, you will need to obtain an access token:
-
 ```python
 import cluedin
 
@@ -30,8 +28,8 @@ cluedin.load_token_into_context(context)
 print(context['access_token'])
 ```
 
-Run a GraphQL query:
 
+Run a GraphQL query:
 ```python
 query = """
     query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
@@ -56,7 +54,6 @@ response = cluedin.gql.gql(context, query, variables)
 ```
 
 Get paged results:
-
 ```python
 import numpy as np
 import pandas as pd
