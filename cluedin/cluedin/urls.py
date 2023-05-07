@@ -27,4 +27,4 @@ def get_graphql_url(context):
     if 'graphql' in context:
         return context['graphql']
     else:
-        return f'{get_org_url(context)}/graphql'
+        return f'{get_api_url(context)}/graphql'
