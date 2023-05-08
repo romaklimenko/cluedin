@@ -210,7 +210,7 @@
 							"name": "Account",
 							"item": [
 								{
-									"name": "Check if an Organization Account is available",
+									"name": "Check if an Organization is available",
 									"request": {
 										"auth": {
 											"type": "noauth"
@@ -319,7 +319,7 @@
 									]
 								},
 								{
-									"name": "Create an Organization Account",
+									"name": "Create an Organization",
 									"request": {
 										"auth": {
 											"type": "noauth"
@@ -1356,8 +1356,43 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "{\r\n  search (query:\"entityType:{{entity_type}}\" pageSize: 1000 )\r\n  {\r\n    entries\r\n    {\r\n\t    id\r\n        name\r\n        entityType\r\n        properties\r\n    }\r\n  }\r\n}",
-										"variables": ""
+										"query": "query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {\r\n  search(query: $query, sort: DATE, cursor: $cursor, pageSize: $pageSize) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n    }\r\n  }\r\n}\r\n",
+										"variables": "{\n  \"query\": \"entityType:{{entity_type}}\",\n  \"pageSize\": 10000\n}"
+									}
+								},
+								"url": {
+									"raw": "{{api}}/graphql",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search with Variables",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query searchQuery($query: String, $filter: String, $rule: String, $filters: [FilterQuery], $terms: [TermQuery], $pageSize: Int, $contextIds: [Guid], $sort: SortMethod, $sortDirection: SortDirection, $includeExternalData: Boolean, $includeUnstructuredData: Boolean, $cursor: PagingCursor, $searchUntokenized: Boolean, $sortFields: [SortField]) {\r\n  search(\r\n    query: $query\r\n    filter: $filter\r\n    rule: $rule\r\n    filters: $filters\r\n    terms: $terms\r\n    pageSize: $pageSize\r\n    contextIds: $contextIds\r\n    sort: $sort\r\n    sortDirection: $sortDirection\r\n    includeExternalData: $includeExternalData\r\n    includeUnstructuredData: $includeUnstructuredData\r\n    cursor: $cursor\r\n    searchUntokenized: $searchUntokenized\r\n    sortFields: $sortFields\r\n  ) {\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      createdDate\r\n      discoveryDate\r\n      modifiedDate\r\n      properties\r\n      originEntityCode\r\n      providerOrigins\r\n      description\r\n      uris\r\n      previewImage {\r\n        uri\r\n        __typename\r\n      }\r\n      entityType\r\n      sortDate\r\n      __typename\r\n    }\r\n    aggregations\r\n    __typename\r\n  }\r\n}\r\n",
+										"variables": "{\n  \"query\": \"*\",\n  \"pageSize\": 20,\n  \"cursor\": \"ewAiAHAAYQBnAGUAUwBpAHoAZQAiADoAMgAwACwAIgBwAGEAZwBlACIAOgAwAH0A\",\n  \"sort\": \"DATE\",\n  \"sortDirection\": \"DESCENDING\",\n  \"filters\": []\n}"
 									}
 								},
 								"url": {
@@ -1778,275 +1813,6 @@
 			"name": "API",
 			"item": [
 				{
-					"name": "Entity",
-					"item": [
-						{
-							"name": "Get an Entity by Id",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{api}}/entity?id={{entity_id}}&full=true",
-									"host": [
-										"{{api}}"
-									],
-									"path": [
-										"entity"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "{{entity_id}}"
-										},
-										{
-											"key": "full",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Entity Relations",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{api}}/entity/relations?id={{entity_id}}&relationship={{edge_type}}",
-									"host": [
-										"{{api}}"
-									],
-									"path": [
-										"entity",
-										"relations"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "{{entity_id}}"
-										},
-										{
-											"key": "relationship",
-											"value": "{{edge_type}}"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Entity Edges",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{api}}/entityedges?id={{entity_id}}",
-									"host": [
-										"{{api}}"
-									],
-									"path": [
-										"entityedges"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "{{entity_id}}"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "v1",
-					"item": [
-						{
-							"name": "Entity",
-							"item": [
-								{
-									"name": "Get Schema",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{api}}/v1/entity/schema/",
-											"host": [
-												"{{api}}"
-											],
-											"path": [
-												"v1",
-												"entity",
-												"schema",
-												""
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Vocabs",
-							"item": [
-								{
-									"name": "Get Vocabularies by Key Names",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{api}}/v1/vocabs/key/getbykeynames?keyNames={{vocabulary_key_0}}&keyNames={{vocabulary_key_1}}",
-											"host": [
-												"{{api}}"
-											],
-											"path": [
-												"v1",
-												"vocabs",
-												"key",
-												"getbykeynames"
-											],
-											"query": [
-												{
-													"key": "keyNames",
-													"value": "{{vocabulary_key_0}}"
-												},
-												{
-													"key": "keyNames",
-													"value": "{{vocabulary_key_1}}"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Vocabulary Keys by Vocabulary Id",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{api}}/vocabs/:vocabulary_id/keys",
-											"host": [
-												"{{api}}"
-											],
-											"path": [
-												"vocabs",
-												":vocabulary_id",
-												"keys"
-											],
-											"variable": [
-												{
-													"key": "vocabulary_id",
-													"value": null
-												}
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						}
-					]
-				},
-				{
-					"name": "v2",
-					"item": [
-						{
-							"name": "Organization",
-							"item": [
-								{
-									"name": "Providers",
-									"item": [
-										{
-											"name": "Pause / Play a Crawler",
-											"request": {
-												"method": "PUT",
-												"header": [],
-												"url": {
-													"raw": "{{api}}/organization/providers?id={{provider_id}}&active=true&AccountId={{account_id}}",
-													"host": [
-														"{{api}}"
-													],
-													"path": [
-														"organization",
-														"providers"
-													],
-													"query": [
-														{
-															"key": "id",
-															"value": "{{provider_id}}",
-															"description": "The ProviderId can be fount in the OpenCommunication.Provider table."
-														},
-														{
-															"key": "active",
-															"value": "true"
-														},
-														{
-															"key": "AccountId",
-															"value": "{{account_id}}",
-															"description": "The AccountId is visible in UI as the integration configuration's name."
-														}
-													]
-												}
-											},
-											"response": []
-										}
-									]
-								}
-							]
-						}
-					]
-				},
-				{
-					"name": "Organization",
-					"item": [
-						{
-							"name": "Metrics",
-							"item": [
-								{
-									"name": "Run Metrics",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"url": {
-											"raw": "{{api}}/organization/metrics",
-											"host": [
-												"{{api}}"
-											],
-											"path": [
-												"organization",
-												"metrics"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Get Global Security Filter Setting",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{api}}/organization/securityfilter/{{organization_id}}",
-									"host": [
-										"{{api}}"
-									],
-									"path": [
-										"organization",
-										"securityfilter",
-										"{{organization_id}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Admin",
 					"item": [
 						{
@@ -2330,34 +2096,249 @@
 									]
 								}
 							]
+						},
+						{
+							"name": "Entity",
+							"item": [
+								{
+									"name": "Get an Entity Blob",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/admin/entity/blob/?id={{entity_id}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"admin",
+												"entity",
+												"blob",
+												""
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{entity_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				},
 				{
-					"name": "Get an Entity Blob",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{api}}/admin/entity/blob/?id={{entity_id}}",
-							"host": [
-								"{{api}}"
-							],
-							"path": [
-								"admin",
-								"entity",
-								"blob",
-								""
-							],
-							"query": [
+					"name": "Entity",
+					"item": [
+						{
+							"name": "Get an Entity by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entity?id={{entity_id}}&full=true",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entity"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										},
+										{
+											"key": "full",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Entity Relations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entity/relations?id={{entity_id}}&relationship={{edge_type}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entity",
+										"relations"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										},
+										{
+											"key": "relationship",
+											"value": "{{edge_type}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Entity Edges",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/entityedges?id={{entity_id}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"entityedges"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{entity_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Schema",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Organization",
+					"item": [
+						{
+							"name": "Metrics",
+							"item": [
 								{
-									"key": "id",
-									"value": "{{entity_id}}"
+									"name": "Run Metrics",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{api}}/organization/metrics",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"organization",
+												"metrics"
+											]
+										}
+									},
+									"response": []
 								}
 							]
+						},
+						{
+							"name": "Providers",
+							"item": [
+								{
+									"name": "Pause / Play a Crawler",
+									"request": {
+										"method": "PUT",
+										"header": []
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get Global Security Filter Setting",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/organization/securityfilter/{{organization_id}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"organization",
+										"securityfilter",
+										"{{organization_id}}"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
+				},
+				{
+					"name": "Vocabs",
+					"item": [
+						{
+							"name": "Get Vocabularies by Key Names",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/vocabs/key/getbykeynames?keyNames={{vocabulary_key_0}}&keyNames={{vocabulary_key_1}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"vocabs",
+										"key",
+										"getbykeynames"
+									],
+									"query": [
+										{
+											"key": "keyNames",
+											"value": "{{vocabulary_key_0}}"
+										},
+										{
+											"key": "keyNames",
+											"value": "{{vocabulary_key_1}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Vocabulary Keys by Vocabulary Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/vocabs/:vocabulary_id/keys",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"vocabs",
+										":vocabulary_id",
+										"keys"
+									],
+									"variable": [
+										{
+											"key": "vocabulary_id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
