@@ -1,6 +1,34 @@
 import requests
 from .urls import get_auth_url
 
+# Account
+
+
+def get_users(context, organization=None):
+    headers = {
+        'Authorization': 'Bearer {}'.format(context['access_token'])
+    }
+
+    params = {}
+
+    if organization is not None:
+        params['organizationId'] = organization
+
+    response = requests.get(
+        url=f'{get_auth_url(context)}/api/account/accounts',
+        headers=headers,
+        params=params)
+
+    if not response.ok:
+        raise Exception({
+            'status_code': response.status_code,
+            'text': response.text
+        })
+
+    return response.json()
+
+
+# Availability
 
 def is_organization_available_response(context, organization):
     headers = {
