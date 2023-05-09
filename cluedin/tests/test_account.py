@@ -3,6 +3,28 @@ import cluedin
 
 
 class TestAccount:
+
+    # Account
+
+    def test_get_users(self):
+        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
+        cluedin.load_token_into_context(context)
+
+        # get users without providing organization_id
+
+        users = cluedin.account.get_users(context)
+        organization_id = users[0]['Account']['OrganizationId']
+
+        assert len(users) == 3
+
+        # get users by organization_id
+
+        users = cluedin.account.get_users(context, organization_id)
+
+        assert len(users) == 3
+
+    # Availability
+
     def test_is_organization_available(self):
         context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
         cluedin.load_token_into_context(context)
