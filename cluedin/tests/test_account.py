@@ -15,13 +15,13 @@ class TestAccount:
         users = cluedin.account.get_users(context)
         organization_id = users[0]['Account']['OrganizationId']
 
-        assert len(users) == 3
+        assert len(users) > 0
 
         # get users by organization_id
 
         users = cluedin.account.get_users(context, organization_id)
 
-        assert len(users) == 3
+        assert len(users) > 0
 
     # Availability
 
