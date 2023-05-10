@@ -28,3 +28,10 @@ def get_graphql_url(context):
         return context['graphql']
     else:
         return f'{get_api_url(context)}/graphql'
+
+
+def get_public_api_url(context):
+    if 'public' in context:
+        return context['public']
+    else:
+        return f'{get_org_url(context)}/public/api'
