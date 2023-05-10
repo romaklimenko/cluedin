@@ -1,5 +1,6 @@
 import requests
 from .urls import get_auth_url
+from .utils import parse_jwt
 
 
 def get_token_response(context):
@@ -22,4 +23,5 @@ def get_token_response(context):
 def load_token_into_context(context):
     token_response = get_token_response(context)
     context['access_token'] = token_response['access_token']
+    context['jwt'] = parse_jwt(context['access_token'])
     return context

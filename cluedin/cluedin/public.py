@@ -1,6 +1,5 @@
 import requests
 from .urls import get_public_api_url
-from .utils import parse_jwt
 from .account import get_users
 
 
@@ -28,8 +27,7 @@ def post_clue(context, clue, content_type='application/xml'):
 
 def restore_user_entities(context):
 
-    jwt_payload = parse_jwt(context['access_token'])
-    organization_id = jwt_payload['OrganizationId']
+    organization_id = context['jwt']['OrganizationId']
     organization = context['organization']
 
     results = []

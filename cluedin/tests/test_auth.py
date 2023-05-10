@@ -19,3 +19,5 @@ class TestAuth:
         cluedin.load_token_into_context(context)
 
         assert len(context['access_token']) > 0
+        assert context['jwt'] is not None
+        assert context['jwt']['OrganizationId'] is not None
