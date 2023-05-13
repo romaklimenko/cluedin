@@ -1,7 +1,7 @@
 import requests
 from .account import get_users
 from .context import Context
-from . import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT
 
 
 def post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str:

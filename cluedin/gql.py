@@ -1,6 +1,6 @@
 import requests
 from .context import Context
-from . import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT
 
 
 def gql(context: Context, query: str, variables: dict = {}) -> str:
