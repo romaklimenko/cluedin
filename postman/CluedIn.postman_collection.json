@@ -31,7 +31,7 @@
 											"            .split('')\r",
 											"            .map(char => '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2))\r",
 											"            .join('')));\r",
-											"postman.setEnvironmentVariable(\"organization_id\", jwt.OrganizationId);\r",
+											"postman.setEnvironmentVariable(\"org_id\", jwt.OrganizationId);\r",
 											""
 										],
 										"type": "text/javascript"
@@ -76,9 +76,9 @@
 									]
 								},
 								"url": {
-									"raw": "{{auth}}/connect/token",
+									"raw": "{{auth_url}}/connect/token",
 									"host": [
-										"{{auth}}"
+										"{{auth_url}}"
 									],
 									"path": [
 										"connect",
@@ -210,7 +210,7 @@
 							"name": "Account",
 							"item": [
 								{
-									"name": "Check if an Organization is available",
+									"name": "Is Organization available",
 									"request": {
 										"auth": {
 											"type": "noauth"
@@ -218,9 +218,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{auth}}/api/account/available?clientId={{organization}}",
+											"raw": "{{auth_url}}/api/account/available?clientId={{org_name}}",
 											"host": [
-												"{{auth}}"
+												"{{auth_url}}"
 											],
 											"path": [
 												"api",
@@ -230,7 +230,7 @@
 											"query": [
 												{
 													"key": "clientId",
-													"value": "{{organization}}"
+													"value": "{{org_name}}"
 												}
 											]
 										},
@@ -319,6 +319,85 @@
 									]
 								},
 								{
+									"name": "Is User available",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth_url}}/api/account/username?username={{user_email}}&clientId={{org_url}}",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"username"
+											],
+											"query": [
+												{
+													"key": "username",
+													"value": "{{user_email}}"
+												},
+												{
+													"key": "clientId",
+													"value": "{{org_url}}"
+												}
+											]
+										},
+										"description": "Checks, if an organization account (tenant) with a given name is available."
+									},
+									"response": []
+								},
+								{
+									"name": "Get all Users",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth_url}}/api/account/accounts",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"accounts"
+											]
+										},
+										"description": "Checks, if an organization account (tenant) with a given name is available."
+									},
+									"response": []
+								},
+								{
+									"name": "Get all Users of Organization",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth_url}}/api/account/accounts?organizationId={{org_id}}",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"accounts"
+											],
+											"query": [
+												{
+													"key": "organizationId",
+													"value": "{{org_id}}"
+												}
+											]
+										},
+										"description": "Checks, if an organization account (tenant) with a given name is available."
+									},
+									"response": []
+								},
+								{
 									"name": "Create an Organization",
 									"request": {
 										"auth": {
@@ -338,12 +417,12 @@
 											"formdata": [
 												{
 													"key": "username",
-													"value": "{{user}}",
+													"value": "{{user_email}}",
 													"type": "text"
 												},
 												{
 													"key": "email",
-													"value": "{{user}}",
+													"value": "{{user_email}}",
 													"type": "text"
 												},
 												{
@@ -358,12 +437,12 @@
 												},
 												{
 													"key": "organizationName",
-													"value": "{{organization}}",
+													"value": "{{org_name}}",
 													"type": "text"
 												},
 												{
 													"key": "applicationSubDomain",
-													"value": "{{organization}}",
+													"value": "{{org_name}}",
 													"type": "text"
 												},
 												{
@@ -385,9 +464,9 @@
 											]
 										},
 										"url": {
-											"raw": "{{auth}}/api/account/new",
+											"raw": "{{auth_url}}/api/account/new",
 											"host": [
-												"{{auth}}"
+												"{{auth_url}}"
 											],
 											"path": [
 												"api",
@@ -548,9 +627,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{auth}}/api/account/invitationcode?email={{user}}",
+											"raw": "{{auth_url}}/api/account/invitationcode?email={{user_email}}",
 											"host": [
-												"{{auth}}"
+												"{{auth_url}}"
 											],
 											"path": [
 												"api",
@@ -560,7 +639,7 @@
 											"query": [
 												{
 													"key": "email",
-													"value": "{{user}}"
+													"value": "{{user_email}}"
 												}
 											]
 										},
@@ -694,9 +773,9 @@
 											]
 										},
 										"url": {
-											"raw": "{{auth}}/api/account/register?code={{invite_code}}",
+											"raw": "{{auth_url}}/api/account/register?code={{invite_code}}",
 											"host": [
-												"{{auth}}"
+												"{{auth_url}}"
 											],
 											"path": [
 												"api",
@@ -837,9 +916,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{auth}}/api/account/user",
+											"raw": "{{auth_url}}/api/account/user",
 											"host": [
-												"{{auth}}"
+												"{{auth_url}}"
 											],
 											"path": [
 												"api",
@@ -961,9 +1040,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1076,9 +1155,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1191,9 +1270,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1215,14 +1294,14 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "{\r\n  entity(id:\"{{entity_id}}\")\r\n  {\r\n    id\r\n    name\r\n    entityType\r\n    properties\r\n  }\r\n}",
+										"query": "{\r\n  entity(id:\"{{entity_id}}\")\r\n  {\r\n    id\r\n    name\r\n    codes\r\n    originEntityCode\r\n    entityType\r\n    properties\r\n  }\r\n}",
 										"variables": ""
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1249,9 +1328,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{graphql}}",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{graphql}}"
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
 									]
 								}
 							},
@@ -1286,9 +1368,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1321,9 +1403,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1361,9 +1443,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1396,9 +1478,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1420,9 +1502,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/graphql",
+									"raw": "{{api_url}}/graphql",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1449,9 +1531,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1473,9 +1555,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1497,9 +1579,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1521,9 +1603,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1545,9 +1627,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1569,9 +1651,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1593,9 +1675,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1617,9 +1699,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1641,9 +1723,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1665,9 +1747,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1689,9 +1771,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{org}}/graphql",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{org}}"
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1724,9 +1806,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{graphql}}",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{graphql}}"
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
 									]
 								}
 							},
@@ -1745,9 +1830,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{graphql}}",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{graphql}}"
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
 									]
 								}
 							},
@@ -1771,9 +1859,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{graphql}}",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{graphql}}"
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
 									]
 								}
 							},
@@ -1797,9 +1888,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{graphql}}",
+									"raw": "{{org_url}}/graphql",
 									"host": [
-										"{{graphql}}"
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
 									]
 								}
 							},
@@ -1840,9 +1934,9 @@
 																	}
 																],
 																"url": {
-																	"raw": "{{api}}/admin/commands/process/all/?organizationId={{organization_id}}&entityType={{entity_type}}&minsize=0",
+																	"raw": "{{api_url}}/admin/commands/process/all/?organizationId={{org_id}}&entityType={{entity_type}}&minsize=0",
 																	"host": [
-																		"{{api}}"
+																		"{{api_url}}"
 																	],
 																	"path": [
 																		"admin",
@@ -1854,7 +1948,7 @@
 																	"query": [
 																		{
 																			"key": "organizationId",
-																			"value": "{{organization_id}}"
+																			"value": "{{org_id}}"
 																		},
 																		{
 																			"key": "entityType",
@@ -1882,9 +1976,9 @@
 																	}
 																],
 																"url": {
-																	"raw": "{{api}}/admin/commands/process/entity/?organizationId={{organization_id}}&id={{entity_id}}&minsize=0",
+																	"raw": "{{api_url}}/admin/commands/process/entity/?organizationId={{org_id}}&id={{entity_id}}&minsize=0",
 																	"host": [
-																		"{{api}}"
+																		"{{api_url}}"
 																	],
 																	"path": [
 																		"admin",
@@ -1896,7 +1990,7 @@
 																	"query": [
 																		{
 																			"key": "organizationId",
-																			"value": "{{organization_id}}"
+																			"value": "{{org_id}}"
 																		},
 																		{
 																			"key": "id",
@@ -1930,9 +2024,9 @@
 																		"method": "GET",
 																		"header": [],
 																		"url": {
-																			"raw": "{{api}}/admin/commands/process/metrics/entity/all/?organizationId={{organization_id}}&minsize=0",
+																			"raw": "{{api_url}}/admin/commands/process/metrics/entity/all/?organizationId={{org_id}}&minsize=0",
 																			"host": [
-																				"{{api}}"
+																				"{{api_url}}"
 																			],
 																			"path": [
 																				"admin",
@@ -1946,7 +2040,7 @@
 																			"query": [
 																				{
 																					"key": "organizationId",
-																					"value": "{{organization_id}}"
+																					"value": "{{org_id}}"
 																				},
 																				{
 																					"key": "minsize",
@@ -1963,9 +2057,9 @@
 																		"method": "GET",
 																		"header": [],
 																		"url": {
-																			"raw": "{{api}}/admin/commands/process/metrics/entity/all/entityType/?organizationId={{organization_id}}&entityType={{entity_id}}&minsize=0",
+																			"raw": "{{api_url}}/admin/commands/process/metrics/entity/all/entityType/?organizationId={{org_id}}&entityType={{entity_type}}&minsize=0",
 																			"host": [
-																				"{{api}}"
+																				"{{api_url}}"
 																			],
 																			"path": [
 																				"admin",
@@ -1980,11 +2074,11 @@
 																			"query": [
 																				{
 																					"key": "organizationId",
-																					"value": "{{organization_id}}"
+																					"value": "{{org_id}}"
 																				},
 																				{
 																					"key": "entityType",
-																					"value": "{{entity_id}}"
+																					"value": "{{entity_type}}"
 																				},
 																				{
 																					"key": "minsize",
@@ -2003,9 +2097,9 @@
 																"method": "GET",
 																"header": [],
 																"url": {
-																	"raw": "{{api}}/admin/commands/process/metrics/entity/?organizationId={{organization_id}}&id={{entity_id}}",
+																	"raw": "{{api_url}}/admin/commands/process/metrics/entity/?organizationId={{org_id}}&id={{entity_id}}",
 																	"host": [
-																		"{{api}}"
+																		"{{api_url}}"
 																	],
 																	"path": [
 																		"admin",
@@ -2018,7 +2112,7 @@
 																	"query": [
 																		{
 																			"key": "organizationId",
-																			"value": "{{organization_id}}"
+																			"value": "{{org_id}}"
 																		},
 																		{
 																			"key": "id",
@@ -2035,9 +2129,9 @@
 																"method": "GET",
 																"header": [],
 																"url": {
-																	"raw": "{{api}}/admin/commands/process/metrics/entity/explain?organizationId={{organization_id}}&id={{entity_id}}",
+																	"raw": "{{api_url}}/admin/commands/process/metrics/entity/explain?organizationId={{org_id}}&id={{entity_id}}",
 																	"host": [
-																		"{{api}}"
+																		"{{api_url}}"
 																	],
 																	"path": [
 																		"admin",
@@ -2050,7 +2144,7 @@
 																	"query": [
 																		{
 																			"key": "organizationId",
-																			"value": "{{organization_id}}"
+																			"value": "{{org_id}}"
 																		},
 																		{
 																			"key": "id",
@@ -2067,9 +2161,9 @@
 																"method": "GET",
 																"header": [],
 																"url": {
-																	"raw": "{{api}}/admin/commands/archive/metrics/entity/?organizationId={{organization_id}}",
+																	"raw": "{{api_url}}/admin/commands/archive/metrics/entity/?organizationId={{org_id}}",
 																	"host": [
-																		"{{api}}"
+																		"{{api_url}}"
 																	],
 																	"path": [
 																		"admin",
@@ -2082,7 +2176,7 @@
 																	"query": [
 																		{
 																			"key": "organizationId",
-																			"value": "{{organization_id}}"
+																			"value": "{{org_id}}"
 																		}
 																	]
 																}
@@ -2106,15 +2200,40 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{api}}/admin/entity/blob/?id={{entity_id}}",
+											"raw": "{{api_url}}/admin/entity/blob/?id={{entity_id}}",
 											"host": [
-												"{{api}}"
+												"{{api_url}}"
 											],
 											"path": [
 												"admin",
 												"entity",
 												"blob",
 												""
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{entity_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Entity as Clue",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api_url}}/admin/entity/clue?id={{entity_id}}",
+											"host": [
+												"{{api_url}}"
+											],
+											"path": [
+												"admin",
+												"entity",
+												"clue"
 											],
 											"query": [
 												{
@@ -2139,9 +2258,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/entity?id={{entity_id}}&full=true",
+									"raw": "{{api_url}}/entity?id={{entity_id}}&full=true",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"entity"
@@ -2166,9 +2285,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/entity/relations?id={{entity_id}}&relationship={{edge_type}}",
+									"raw": "{{api_url}}/entity/relations?id={{entity_id}}&relationship={{edge_type}}",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"entity",
@@ -2194,9 +2313,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/entityedges?id={{entity_id}}",
+									"raw": "{{api_url}}/entityedges?id={{entity_id}}",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"entityedges"
@@ -2215,7 +2334,18 @@
 							"name": "Get Schema",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/entity/schema/",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"entity",
+										"schema",
+										""
+									]
+								}
 							},
 							"response": []
 						}
@@ -2233,9 +2363,9 @@
 										"method": "POST",
 										"header": [],
 										"url": {
-											"raw": "{{api}}/organization/metrics",
+											"raw": "{{api_url}}/organization/metrics",
 											"host": [
-												"{{api}}"
+												"{{api_url}}"
 											],
 											"path": [
 												"organization",
@@ -2254,7 +2384,33 @@
 									"name": "Pause / Play a Crawler",
 									"request": {
 										"method": "PUT",
-										"header": []
+										"header": [],
+										"url": {
+											"raw": "{{api_url}}/organization/providers?id={{provider_id}}&active=true&AccountId={{account_id}}",
+											"host": [
+												"{{api_url}}"
+											],
+											"path": [
+												"organization",
+												"providers"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{provider_id}}",
+													"description": "The ProviderId can be fount in the OpenCommunication.Provider table."
+												},
+												{
+													"key": "active",
+													"value": "true"
+												},
+												{
+													"key": "AccountId",
+													"value": "{{account_id}}",
+													"description": "The AccountId is visible in UI as the integration configuration's name."
+												}
+											]
+										}
 									},
 									"response": []
 								}
@@ -2266,9 +2422,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/organization/securityfilter/{{organization_id}}",
+									"raw": "{{api_url}}/organization/securityfilter/{{organization_id}}",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"organization",
@@ -2290,9 +2446,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/vocabs/key/getbykeynames?keyNames={{vocabulary_key_0}}&keyNames={{vocabulary_key_1}}",
+									"raw": "{{api_url}}/vocabs/key/getbykeynames?keyNames={{vocabulary_key_0}}&keyNames={{vocabulary_key_1}}",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"vocabs",
@@ -2319,9 +2475,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/vocabs/:vocabulary_id/keys",
+									"raw": "{{api_url}}/vocabs/:vocabulary_id/keys",
 									"host": [
-										"{{api}}"
+										"{{api_url}}"
 									],
 									"path": [
 										"vocabs",
@@ -2351,9 +2507,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api}}/configuration/providers",
+							"raw": "{{api_url}}/configuration/providers",
 							"host": [
-								"{{api}}"
+								"{{api_url}}"
 							],
 							"path": [
 								"configuration",
@@ -2369,9 +2525,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api}}/configuration/providers?id={{provider_id}}",
+							"raw": "{{api_url}}/configuration/providers?id={{provider_id}}",
 							"host": [
-								"{{api}}"
+								"{{api_url}}"
 							],
 							"path": [
 								"configuration",
@@ -2393,9 +2549,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api}}/configuration/inactiveproviders",
+							"raw": "{{api_url}}/configuration/inactiveproviders",
 							"host": [
-								"{{api}}"
+								"{{api_url}}"
 							],
 							"path": [
 								"configuration",
@@ -2411,9 +2567,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api}}/configuration/inactiveproviders?id={{provider_id}}",
+							"raw": "{{api_url}}/configuration/inactiveproviders?id={{provider_id}}",
 							"host": [
-								"{{api}}"
+								"{{api_url}}"
 							],
 							"path": [
 								"configuration",
@@ -2435,9 +2591,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api}}/configuration/providerlist",
+							"raw": "{{api_url}}/configuration/providerlist",
 							"host": [
-								"{{api}}"
+								"{{api_url}}"
 							],
 							"path": [
 								"configuration",
@@ -2446,6 +2602,54 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "API",
+					"item": [
+						{
+							"name": "v1",
+							"item": [
+								{
+									"name": "Restore User Entity",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "<clue organization=\"{{organization_id}}\" origin=\"/Infrastructure/User#CluedIn:{{user_id}}\" appVersion=\"2.17.0.0\">\n  <clueDetails>\n    <data inputSource=\"user\" origin=\"/Infrastructure/User#CluedIn:{{user_id}}\" appVersion=\"2.17.0.0\">\n      <processingFlags />\n      <entityData id=\"6\" origin=\"/Infrastructure/User#CluedIn:{{user_id}}\" appVersion=\"2.17.0.0\">\n        <entityType>/Infrastructure/User</entityType>\n        <name>{{user}}</name>\n        <aliases>\n          <value>{{user_id}}</value>\n          <value>{{user}}</value>\n        </aliases>\n        <systemTagName>{{user}}</systemTagName>\n        <codes>\n          <value>/Infrastructure/User#CluedIn:{{user_id}}</value>\n          <value>/Infrastructure/User#CluedIn:{{user}}</value>\n        </codes>\n        <edges>\n          <outgoing>\n            <edge type=\"/WorksFor\" creationOptions=\"Default\" from=\"C:/Infrastructure/User#CluedIn:{{user_id}}\" to=\"{{organization}}§C:/Organization#CluedIn:{{organization_id}}\" />\n          </outgoing>\n        </edges>\n        <edgesSummary />\n        <properties type=\"/Metadata/KeyValue\">\n          <property key=\"IsNewUser\">True</property>\n          <property key=\"organization.name\">{{organization}}</property>\n          <property key=\"user.email\">{{user}}</property>\n        </properties>\n      </entityData>\n      <dataActions />\n      <processedData ref=\"6\" origin=\"/Infrastructure/User#CluedIn:{{user_id}}\" appVersion=\"2.17.0.0\">\n        <edges />\n        <edgesSummary />\n        <properties type=\"/Metadata/KeyValue\" />\n        <timeToLive>0</timeToLive>\n        <isShadowEntity>False</isShadowEntity>\n      </processedData>\n    </data>\n    <references />\n  </clueDetails>\n</clue>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{public_api_url}}/v1/clue?save=true",
+											"host": [
+												"{{public_api_url}}"
+											],
+											"path": [
+												"v1",
+												"clue"
+											],
+											"query": [
+												{
+													"key": "save",
+													"value": "true"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
 				}
 			]
 		},
@@ -2680,12 +2884,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{elasticsearch}}/{{organization}}/_search",
+											"raw": "{{elasticsearch_url}}/{{org_name}}/_search",
 											"host": [
-												"{{elasticsearch}}"
+												"{{elasticsearch_url}}"
 											],
 											"path": [
-												"{{organization}}",
+												"{{org_name}}",
 												"_search"
 											]
 										}
@@ -2756,12 +2960,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{elasticsearch}}/{{organization}}/_search",
+											"raw": "{{elasticsearch_url}}/{{org_name}}/_search",
 											"host": [
-												"{{elasticsearch}}"
+												"{{elasticsearch_url}}"
 											],
 											"path": [
-												"{{organization}}",
+												"{{org_name}}",
 												"_search"
 											]
 										}
@@ -2832,12 +3036,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{elasticsearch}}/{{organization}}/_search",
+											"raw": "{{elasticsearch_url}}/{{org_name}}/_search",
 											"host": [
-												"{{elasticsearch}}"
+												"{{elasticsearch_url}}"
 											],
 											"path": [
-												"{{organization}}",
+												"{{org_name}}",
 												"_search"
 											]
 										}
@@ -2935,9 +3139,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{libpostal}}/parser",
+									"raw": "{{libpostal_url}}/parser",
 									"host": [
-										"{{libpostal}}"
+										"{{libpostal_url}}"
 									],
 									"path": [
 										"parser"
@@ -3006,9 +3210,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{libpostal}}/parser",
+									"raw": "{{libpostal_url}}/parser",
 									"host": [
-										"{{libpostal}}"
+										"{{libpostal_url}}"
 									],
 									"path": [
 										"parser"
