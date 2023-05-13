@@ -1,5 +1,6 @@
 import os
 import pytest
+import requests
 from .ctx import cluedin
 from cluedin import Context
 
@@ -59,7 +60,7 @@ class TestGql:
             "cursor": ""  # this will break the response
         }
 
-        with pytest.raises(Exception) as exception:
+        with pytest.raises(requests.HTTPError) as exception:
             cluedin.gql.gql(context, query, variables)
 
         assert str(exception.value) == "{'status_code': 400, 'text': ''}"
