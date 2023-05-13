@@ -1,7 +1,7 @@
 import json
 import requests
-from .utils import parse_jwt_payload
-from . import CLUEDIN_REQUEST_TIMEOUT
+from .jwt import get_jwt_payload
+from .env import CLUEDIN_REQUEST_TIMEOUT
 
 
 class Context:
@@ -144,4 +144,4 @@ class Context:
             data=data,
             timeout=CLUEDIN_REQUEST_TIMEOUT)
         self.access_token = response.json()['access_token']
-        self.jwt_payload = parse_jwt_payload(self.access_token)
+        self.jwt_payload = get_jwt_payload(self.access_token)
