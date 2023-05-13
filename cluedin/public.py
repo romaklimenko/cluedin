@@ -1,11 +1,12 @@
 import requests
 from .account import get_users
 from .context import Context
+from . import CLUEDIN_REQUEST_TIMEOUT
 
 
 def post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str:
     headers = {
-        'Authorization': 'Bearer {}'.format(context.access_token),
+        'Authorization': f'Bearer {context.access_token}',
         'Content-Type': content_type
     }
     params = {'save': 'true'}
@@ -13,14 +14,12 @@ def post_clue(context: Context, clue: str, content_type: str = 'application/xml'
         url=f'{context.public_api_url}/v1/clue',
         data=clue.encode(),
         headers=headers,
-        params=params
+        params=params,
+        timeout=CLUEDIN_REQUEST_TIMEOUT
     )
 
     if not response.ok:
-        raise Exception({
-            'status_code': response.status_code,
-            'text': response.text
-        })
+        response.raise_for_status()
 
     return response.text
 
