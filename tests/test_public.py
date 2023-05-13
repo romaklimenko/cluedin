@@ -1,5 +1,6 @@
 import os
-import cluedin
+from .ctx import cluedin
+from cluedin import Context
 
 
 class TestPublic:
@@ -7,8 +8,8 @@ class TestPublic:
 
         # Arrange
 
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {

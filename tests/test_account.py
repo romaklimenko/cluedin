@@ -1,5 +1,6 @@
 import os
-import cluedin
+from .ctx import cluedin
+from cluedin import Context
 
 
 class TestAccount:
@@ -7,8 +8,8 @@ class TestAccount:
     # Account
 
     def test_get_users(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         # get users without providing organization_id
 
@@ -26,16 +27,16 @@ class TestAccount:
     # Availability
 
     def test_is_organization_available(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         assert not cluedin.account.is_organization_available(context, 'foobar')
 
         assert cluedin.account.is_organization_available(context, 'foobaz')
 
     def test_is_user_available(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         assert not cluedin.account.is_user_available(
             context, 'admin@foobar.com', 'foobar')

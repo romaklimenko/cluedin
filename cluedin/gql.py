@@ -1,17 +1,17 @@
 import requests
-from .urls import get_graphql_url
+from .context import Context
 
 
-def gql(context, query, variables={}):
+def gql(context: Context, query: str, variables: dict = {}):
     headers = {
-        'Authorization': 'Bearer {}'.format(context['access_token'])
+        'Authorization': 'Bearer {}'.format(context.access_token)
     }
     json = {
         'query': query,
         'variables': variables
     }
     response = requests.post(
-        url=get_graphql_url(context),
+        url=context.gql_api_url,
         json=json,
         headers=headers
     )
@@ -25,7 +25,7 @@ def gql(context, query, variables={}):
     return response.json()
 
 
-def entries(context, query, variables):
+def entries(context: Context, query: str, variables: dict = {}) -> list:
     response = gql(context, query, variables)
     while ('data' in response and
            'search' in response['data'] and

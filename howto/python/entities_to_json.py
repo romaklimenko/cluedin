@@ -1,8 +1,9 @@
 import os
 import cluedin
+from cluedin import Context
 
-context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-cluedin.load_token_into_context(context)
+context = cluedin.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+context.get_token()
 
 query = """
     query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {

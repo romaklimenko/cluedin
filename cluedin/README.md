@@ -25,7 +25,7 @@ context = {
 
 cluedin.load_token_into_context(context)
 
-print(context['access_token'])
+print(context.access_token)
 ```
 
 

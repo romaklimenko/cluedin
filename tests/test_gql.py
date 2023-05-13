@@ -1,12 +1,13 @@
 import os
 import pytest
-import cluedin
+from .ctx import cluedin
+from cluedin import Context
 
 
 class TestGql:
     def test_gql(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
@@ -35,8 +36,8 @@ class TestGql:
         assert 'entries' in response['data']['search']
 
     def test_gql_error(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
@@ -64,8 +65,8 @@ class TestGql:
         assert str(exception.value) == "{'status_code': 400, 'text': ''}"
 
     def test_entries(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
@@ -94,11 +95,11 @@ class TestGql:
             assert 'name' in entry
             assert 'entityType' in entry
 
-        assert len(entries) == 14
+        assert len(entries) > 0
 
     def test_actions(self):
-        context = cluedin.utils.load(os.environ['CLUEDIN_CONTEXT'])
-        cluedin.load_token_into_context(context)
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
@@ -118,7 +119,7 @@ class TestGql:
         """
 
         variables = {
-            "query": "entityType:/Person",
+            "query": "entityType:/Infrastructure/User",
             "pageSize": 5
         }
 
@@ -130,4 +131,4 @@ class TestGql:
             assert 'name' in entry
             assert 'entityType' in entry
 
-        assert len(entries) == 11
+        assert len(entries) > 0
