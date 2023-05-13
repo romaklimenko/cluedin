@@ -1,6 +1,7 @@
 import json
 import requests
 from .utils import parse_jwt_payload
+from . import CLUEDIN_REQUEST_TIMEOUT
 
 
 class Context:
@@ -35,7 +36,7 @@ class Context:
             self.auth_url = f'{self.org_url}/auth'
         else:
             self.auth_url = auth_url
-            
+
         if api_url is None:
             self.api_url = f'{self.org_url}/api/api'
         else:
@@ -57,7 +58,7 @@ class Context:
             self.public_api_url = public_api_url
 
     @classmethod
-    def from_dict(cls, d: dict):
+    def from_dict(cls, context_dict: dict):
         domain: str = None
         org_name: str = None
         user_email: str = None
@@ -71,49 +72,43 @@ class Context:
         gql_api_url: str = None
         public_api_url: str = None
 
-        if 'domain' in d:
-            domain = d['domain']
+        if 'domain' in context_dict:
+            domain = context_dict['domain']
 
-        if 'org_name' in d:
-            org_name = d['org_name']
-        elif 'organization' in d:
-            org_name = d['organization']  # TODO: remove in 2.0.0
+        if 'org_name' in context_dict:
+            org_name = context_dict['org_name']
 
-        if 'user_email' in d:
-            user_email = d['user_email']
-        elif 'user' in d:
-            user_email = d['user']  # TODO: remove in 2.0.0
+        if 'user_email' in context_dict:
+            user_email = context_dict['user_email']
 
-        if 'user_password' in d:
-            user_password = d['user_password']
-        elif 'password' in d:
-            user_password = d['password']  # TODO: remove in 2.0.0
+        if 'user_password' in context_dict:
+            user_password = context_dict['user_password']
 
-        if 'protocol' in d:
-            protocol = d['protocol']
+        if 'protocol' in context_dict:
+            protocol = context_dict['protocol']
         else:
             protocol = 'https'
 
-        if 'access_token' in d:
-            access_token = d['access_token']
+        if 'access_token' in context_dict:
+            access_token = context_dict['access_token']
 
-        if 'org_url' in d:
-            org_url = d['org_url']
+        if 'org_url' in context_dict:
+            org_url = context_dict['org_url']
 
-        if 'auth_url' in d:
-            auth_url = d['auth_url']
+        if 'auth_url' in context_dict:
+            auth_url = context_dict['auth_url']
 
-        if 'api_url' in d:
-            api_url = d['api_url']
+        if 'api_url' in context_dict:
+            api_url = context_dict['api_url']
 
-        if 'gql_url' in d:
-            gql_url = d['gql_url']
+        if 'gql_url' in context_dict:
+            gql_url = context_dict['gql_url']
 
-        if 'gql_api_url' in d:
-            gql_api_url = d['gql_api_url']
+        if 'gql_api_url' in context_dict:
+            gql_api_url = context_dict['gql_api_url']
 
-        if 'public_api_url' in d:
-            public_api_url = d['public_api_url']
+        if 'public_api_url' in context_dict:
+            public_api_url = context_dict['public_api_url']
 
         return cls(protocol=protocol,
                    domain=domain,
@@ -130,9 +125,8 @@ class Context:
 
     @staticmethod
     def from_json_file(file_path: str):
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             return Context.from_dict(json.load(file))
-
 
     def get_token(self) -> dict:
         headers = {
@@ -147,6 +141,7 @@ class Context:
         response = requests.post(
             url=f'{self.auth_url}/connect/token',
             headers=headers,
-            data=data)
+            data=data,
+            timeout=CLUEDIN_REQUEST_TIMEOUT)
         self.access_token = response.json()['access_token']
         self.jwt_payload = parse_jwt_payload(self.access_token)
