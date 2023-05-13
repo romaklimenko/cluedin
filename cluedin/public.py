@@ -1,16 +1,16 @@
 import requests
-from .urls import get_public_api_url
 from .account import get_users
+from .context import Context
 
 
-def post_clue(context, clue, content_type='application/xml'):
+def post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str:
     headers = {
-        'Authorization': 'Bearer {}'.format(context['access_token']),
+        'Authorization': 'Bearer {}'.format(context.access_token),
         'Content-Type': content_type
     }
     params = {'save': 'true'}
     response = requests.post(
-        url=f'{get_public_api_url(context)}/v1/clue',
+        url=f'{context.public_api_url}/v1/clue',
         data=clue.encode(),
         headers=headers,
         params=params
@@ -25,44 +25,44 @@ def post_clue(context, clue, content_type='application/xml'):
     return response.text
 
 
-def restore_user_entities(context):
+def restore_user_entities(context: Context) -> list:
 
-    organization_id = context['jwt']['OrganizationId']
-    organization = context['organization']
+    org_id = context.jwt_payload['OrganizationId']
+    org_name = context.org_name
 
     results = []
 
-    for user in get_users(context, organization_id):
+    for user in get_users(context, org_id):
         if user['Entity'] is None:
             user_id = user['Account']['Id']
-            username = user['Account']['UserName']
+            user_name = user['Account']['UserName']
 
-            clue = f'''<clue organization="{organization_id}" origin="/Infrastructure/User#CluedIn:{user_id}" appVersion="2.17.0.0">
+            clue = f'''<clue organization="{org_id}" origin="/Infrastructure/User#CluedIn:{user_id}" appVersion="2.17.0.0">
           <clueDetails>
             <data inputSource="user" origin="/Infrastructure/User#CluedIn:{user_id}" appVersion="2.17.0.0">
               <processingFlags />
               <entityData id="6" origin="/Infrastructure/User#CluedIn:{user_id}" appVersion="2.17.0.0">
                 <entityType>/Infrastructure/User</entityType>
-                <name>{username}</name>
+                <name>{user_name}</name>
                 <aliases>
                   <value>{user_id}</value>
-                  <value>{username}</value>
+                  <value>{user_name}</value>
                 </aliases>
-                <systemTagName>{username}</systemTagName>
+                <systemTagName>{user_name}</systemTagName>
                 <codes>
                   <value>/Infrastructure/User#CluedIn:{user_id}</value>
-                  <value>/Infrastructure/User#CluedIn:{username}</value>
+                  <value>/Infrastructure/User#CluedIn:{user_name}</value>
                 </codes>
                 <edges>
                   <outgoing>
-                    <edge type="/WorksFor" creationOptions="Default" from="C:/Infrastructure/User#CluedIn:{user_id}" to="{organization}§C:/Organization#CluedIn:{organization_id}" />
+                    <edge type="/WorksFor" creationOptions="Default" from="C:/Infrastructure/User#CluedIn:{user_id}" to="{org_name}§C:/Organization#CluedIn:{org_id}" />
                   </outgoing>
                 </edges>
                 <edgesSummary />
                 <properties type="/Metadata/KeyValue">
                   <property key="IsNewUser">True</property>
-                  <property key="organization.name">{organization}</property>
-                  <property key="user.email">{username}</property>
+                  <property key="organization.name">{org_name}</property>
+                  <property key="user.email">{user_name}</property>
                 </properties>
               </entityData>
               <dataActions />
@@ -79,7 +79,7 @@ def restore_user_entities(context):
         </clue>'''
 
             results.append({
-                'user': username,
+                'user': user_name,
                 'result': post_clue(context, clue)
             })
     return results

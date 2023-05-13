@@ -1,8 +1,7 @@
-from .auth import load_token_into_context
+from .context import Context
 
 from . import account
-from . import auth
+from . import context
 from . import gql
 from . import public
-from . import urls
 from . import utils

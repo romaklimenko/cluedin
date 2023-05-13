@@ -1,21 +1,21 @@
 import requests
-from .urls import get_auth_url
+from .context import Context
 
 # Account
 
 
-def get_users(context, organization=None):
+def get_users(context: Context, org_id: str = None) -> str:
     headers = {
-        'Authorization': 'Bearer {}'.format(context['access_token'])
+        'Authorization': 'Bearer {}'.format(context.access_token)
     }
 
     params = {}
 
-    if organization is not None:
-        params['organizationId'] = organization
+    if org_id is not None:
+        params['organizationId'] = org_id
 
     response = requests.get(
-        url=f'{get_auth_url(context)}/api/account/accounts',
+        url=f'{context.auth_url}/api/account/accounts',
         headers=headers,
         params=params)
 
@@ -30,12 +30,12 @@ def get_users(context, organization=None):
 
 # Availability
 
-def is_organization_available_response(context, organization):
+def is_organization_available_response(context: Context, organization):
     headers = {
-        'Authorization': 'Bearer {}'.format(context['access_token'])
+        'Authorization': 'Bearer {}'.format(context.access_token)
     }
     response = requests.get(
-        url=f'{get_auth_url(context)}/api/account/available?clientId={organization}',
+        url=f'{context.auth_url}/api/account/available?clientId={organization}',
         headers=headers)
 
     if not response.ok:
@@ -47,13 +47,13 @@ def is_organization_available_response(context, organization):
     return response.json()
 
 
-def is_organization_available(context, organization):
+def is_organization_available(context: Context, organization):
     return is_organization_available_response(context, organization)['isAvailable']
 
 
 def is_user_available_response(context, user, organization):
     response = requests.get(
-        url=f'{get_auth_url(context)}/api/account/username?username={user}&clientId={organization}')
+        url=f'{context.auth_url}/api/account/username?username={user}&clientId={organization}')
     if not response.ok:
         raise Exception({
             'status_code': response.status_code,
