@@ -1,15 +1,21 @@
 import os
+
+# pylint: disable=wrong-import-order
 from .ctx import cluedin
 from cluedin import Context
 
 
 class TestAccount:
+    # pylint: disable=missing-docstring
 
     # Account
 
     def test_get_users(self):
+        # Arrange
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
+
+        # Act and Assert
 
         # get users without providing organization_id
 
@@ -27,19 +33,30 @@ class TestAccount:
     # Availability
 
     def test_is_organization_available(self):
+
+        # Arrange
+
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
-        assert not cluedin.account.is_organization_available(context, 'foobar')
+        # Act and Assert
+
+        assert not cluedin.account.is_organization_available(
+            context, context.org_name)
 
         assert cluedin.account.is_organization_available(context, 'foobaz')
 
     def test_is_user_available(self):
+
+        # Arrange
+
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
+        # Act and Assert
+
         assert not cluedin.account.is_user_available(
-            context, 'admin@foobar.com', 'foobar')
+            context, context.user_email, context.org_name)
 
         assert cluedin.account.is_user_available(
-            context, 'admin@foobaz.com', 'foobar')
+            context, 'admin@foobaz.com', context.org_name)

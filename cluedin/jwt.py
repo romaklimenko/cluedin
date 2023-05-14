@@ -3,6 +3,14 @@ import json
 
 
 def get_jwt_payload(jwt: str) -> dict:
+    """Get the payload from a JWT.
+
+    Args:
+        jwt (str): JWT.
+
+    Returns:
+        dict: Payload.
+    """
     # Split the token into header, payload, and signature
     _, payload, _ = jwt.split('.')
 

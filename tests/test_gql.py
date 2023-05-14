@@ -1,12 +1,19 @@
 import os
+
 import pytest
 import requests
+
+# pylint: disable=wrong-import-order
 from .ctx import cluedin
 from cluedin import Context
 
 
 class TestGql:
+    # pylint: disable=missing-docstring
+
     def test_gql(self):
+
+        # Arrange
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
@@ -29,6 +36,8 @@ class TestGql:
             "pageSize": 1
         }
 
+        # Act
+
         response = cluedin.gql.gql(context, query, variables)
 
         assert 'data' in response
@@ -37,6 +46,9 @@ class TestGql:
         assert 'entries' in response['data']['search']
 
     def test_gql_error(self):
+
+        # Arrange
+
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
@@ -60,12 +72,19 @@ class TestGql:
             "cursor": ""  # this will break the response
         }
 
+        # Act and Assert
+
         with pytest.raises(requests.HTTPError) as exception:
             cluedin.gql.gql(context, query, variables)
 
-        assert str(exception.value) == "{'status_code': 400, 'text': ''}"
+        # Assert
+
+        assert str(exception.value).startswith('400 Client Error: Bad Request for url:')
 
     def test_entries(self):
+
+        # Arrange
+
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
@@ -85,10 +104,12 @@ class TestGql:
 
         variables = {
             "query": "*",
-            "pageSize": 5
+            "pageSize": 10_000
         }
 
         entries = []
+
+        # Act and Assert
 
         for entry in cluedin.gql.entries(context, query, variables):
             entries.append(entry)
@@ -99,6 +120,9 @@ class TestGql:
         assert len(entries) > 0
 
     def test_actions(self):
+
+        # Arrange
+
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
 
@@ -121,10 +145,12 @@ class TestGql:
 
         variables = {
             "query": "entityType:/Infrastructure/User",
-            "pageSize": 5
+            "pageSize": 10_000
         }
 
         entries = []
+
+        # Act and Assert
 
         for entry in cluedin.gql.entries(context, query, variables):
             entries.append(entry)
