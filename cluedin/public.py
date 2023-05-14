@@ -2,7 +2,7 @@ import requests
 
 from .account import get_users
 from .context import Context
-from .env import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS
 
 
 def post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str:
@@ -28,7 +28,7 @@ def post_clue(context: Context, clue: str, content_type: str = 'application/xml'
         data=clue.encode(),
         headers=headers,
         params=params,
-        timeout=CLUEDIN_REQUEST_TIMEOUT,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls
     )
 

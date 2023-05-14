@@ -1,12 +1,12 @@
 import requests
 
 from .context import Context
-from .env import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS
 
 # Account
 
 
-def get_users(context: Context, org_id: str = None) -> dict:
+def get_users(context: Context, org_id: str = None) -> list:
     """Get users for an organization.
 
     Args:
@@ -15,7 +15,7 @@ def get_users(context: Context, org_id: str = None) -> dict:
             If None, the current user's organization ID is used.
 
     Returns:
-        dict: JSON response.
+        list: JSON response.
     """
     headers = {
         'Authorization': f'Bearer {context.access_token}'
@@ -30,7 +30,7 @@ def get_users(context: Context, org_id: str = None) -> dict:
         url=f'{context.auth_url}/api/account/accounts',
         headers=headers,
         params=params,
-        timeout=CLUEDIN_REQUEST_TIMEOUT,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
     if not response.ok:
@@ -57,7 +57,7 @@ def is_organization_available_response(context: Context, org_name: str) -> dict:
     response = requests.get(
         url=f'{context.auth_url}/api/account/available?clientId={org_name}',
         headers=headers,
-        timeout=CLUEDIN_REQUEST_TIMEOUT,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
     if not response.ok:
@@ -92,7 +92,7 @@ def is_user_available_response(context: Context, user_email: str, org_name: str)
     """
     response = requests.get(
         url=f'{context.auth_url}/api/account/username?username={user_email}&clientId={org_name}',
-        timeout=CLUEDIN_REQUEST_TIMEOUT,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
     if not response.ok:
