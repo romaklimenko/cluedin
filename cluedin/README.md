@@ -117,7 +117,7 @@ entities = cluedin.gql.entries(context, query, variables):
 
 - `CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS` - CluedIn API request timeout (in seconds). If not set, then it defaults to `300` (5 minutes).
 
-### `Context`
+### Context
 
 - `Context.from_dict(cls, context_dict: dict) -> Context` – creates a new `Context` object from a `dict`.
 - `Context.from_json_file(file_path: str) -> Context` – creates a new `Context` object from a JSON-file.
