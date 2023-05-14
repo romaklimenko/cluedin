@@ -27,7 +27,7 @@ class TestContext:
         #     "domain": "cluedin.local",
         #     "org_name": "foobar",
         #     "user_email": "admin@foobar.com",
-        #     "password": "Foobar23!"
+        #     "user_password": "Foobar23!"
         # }
 
         # Act
