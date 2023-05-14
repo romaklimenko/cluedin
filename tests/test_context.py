@@ -1,11 +1,18 @@
 import os
+
 from .ctx import cluedin
 
 
 class TestContext:
+    # pylint: disable=missing-docstring
+
     def test_from_json_file(self):
 
+        # Act
+
         context = cluedin.Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+
+        # Assert
 
         assert context.domain
         assert context.org_name
@@ -23,7 +30,11 @@ class TestContext:
         #     "password": "Foobar23!"
         # }
 
+        # Act
+
         context = cluedin.Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+
+        # Assert
 
         assert context.access_token is None
 

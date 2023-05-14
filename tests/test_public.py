@@ -1,9 +1,13 @@
 import os
+
+# pylint: disable=wrong-import-order
 from .ctx import cluedin
 from cluedin import Context
 
 
 class TestPublic:
+    # pylint: disable=missing-docstring
+
     def test_restore_user_entities(self):
 
         # Arrange
