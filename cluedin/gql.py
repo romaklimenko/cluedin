@@ -1,7 +1,7 @@
 import requests
 
 from .context import Context
-from .env import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS
 
 
 def gql(context: Context, query: str, variables: dict = None) -> dict:
@@ -32,7 +32,7 @@ def gql(context: Context, query: str, variables: dict = None) -> dict:
         url=context.gql_api_url,
         json=json,
         headers=headers,
-        timeout=CLUEDIN_REQUEST_TIMEOUT,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls
     )
 

@@ -1,7 +1,7 @@
 import json
 import requests
 from .jwt import get_jwt_payload
-from .env import CLUEDIN_REQUEST_TIMEOUT
+from .env import CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS
 
 
 class Context:
@@ -173,7 +173,7 @@ class Context:
             url=f'{self.auth_url}/connect/token',
             headers=headers,
             data=data,
-            timeout=CLUEDIN_REQUEST_TIMEOUT,
+            timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
             verify=self.verify_tls)
 
         if not response.ok:

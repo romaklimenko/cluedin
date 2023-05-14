@@ -33,7 +33,7 @@ class TestGql:
 
         variables = {
             "query": "entityType:/Infrastructure/User",
-            "pageSize": 1
+            "pageSize": 10_000
         }
 
         # Act
