@@ -1,4 +1,5 @@
 import os
+import random
 
 # pylint: disable=wrong-import-order
 from .ctx import cluedin
@@ -76,3 +77,31 @@ class TestAccount:
         # Assert
 
         assert invitation_code == 'DE1703F42AA9E52B77F4D4EC2324581E'
+
+    def test_create_organization(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        # Act
+
+        org_name = context.org_name + str(random.randint(1, 1000000))
+
+        response = cluedin.account.create_organization(
+            context,
+            user_email=context.user_email,
+            password=context.user_password,
+            org_name=org_name,
+            email_domain=context.user_email.split('@')[1],
+            new_account_access_key=os.environ['CLUEDIN_NEW_ACCOUNT_ACCESS_KEY'])
+
+        # Assert
+
+        assert response is not None
+        assert response['Active']
+        assert response['ApplicationSubDomain'] == org_name
+        assert response['EmailDomainName'] == context.user_email.split('@')[1]
+        assert response['IsEmailDomainSignupActivated']
+        assert response['Name'] == org_name
