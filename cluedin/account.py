@@ -113,3 +113,28 @@ def is_user_available(context: Context, user_email: str, org_name: str) -> bool:
         bool: True if available, False otherwise.
     """
     return bool(is_user_available_response(context, user_email, org_name)['isAvailable'])
+
+
+# Registration
+
+def get_invitation_code(context: Context, email: str) -> str:
+    """Get an invitation code for a user email.
+
+    Args:
+        context (Context): (Context): Context object.
+        email (str): User email.
+
+    Returns:
+        str: Invitation code.
+    """
+    headers = {
+        'Authorization': f'Bearer {context.access_token}'
+    }
+
+    response = requests.get(
+        url=f'{context.auth_url}/api/account/invitationcode?email={email}',
+        headers=headers,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
+        verify=context.verify_tls)
+
+    return response.text

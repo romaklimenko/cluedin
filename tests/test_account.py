@@ -60,3 +60,19 @@ class TestAccount:
 
         assert cluedin.account.is_user_available(
             context, 'admin@foobaz.com', context.org_name)
+
+    def test_get_invitation_code(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        # Act
+
+        invitation_code = cluedin.account.get_invitation_code(
+            context, email=context.user_email)
+
+        # Assert
+
+        assert invitation_code == 'DE1703F42AA9E52B77F4D4EC2324581E'
