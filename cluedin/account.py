@@ -176,7 +176,7 @@ def create_organization(
     if email_domain is None:
         email_domain = context.domain
 
-    form_data = {
+    data = {
         'username': user_email,
         'email': user_email,
         'password': password,
@@ -191,7 +191,7 @@ def create_organization(
     response = requests.post(
         url=f'{context.auth_url}/api/account/new',
         headers=headers,
-        data=form_data,
+        data=data,
         timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
@@ -199,3 +199,121 @@ def create_organization(
         response.raise_for_status()
 
     return response.json()
+
+
+def create_user(
+        context: Context,
+        user_email: str,
+        user_password: str,
+        application_sub_domain: str = None,
+        client_id: str = None) -> requests.models.Response:
+    """Create a user.
+
+    Args:
+        context (Context): Context object.
+        user_email (str): User email.
+        user_password (str): User password.
+        application_sub_domain (str, optional): Application subdomain. Defaults to None. If None, context.org_name is used.
+        client_id (str, optional): ClientId (Organization name). Defaults to None. If None, context.org_name is used.
+
+    Returns:
+        requests.models.Response: response object.
+    """
+
+    if application_sub_domain is None:
+        application_sub_domain = context.org_name
+
+    if client_id is None:
+        client_id = context.org_name
+
+    headers = {
+        'Authorization': f'Bearer {context.access_token}'
+    }
+
+    invitation_code = get_invitation_code(context, user_email)
+
+    params = {
+        'code': invitation_code
+    }
+
+    data = {
+        'username': user_email,
+        'email': user_email,
+        'password': user_password,
+        'confirmPassword': user_password,
+        'applicationSubDomain': application_sub_domain,
+        'grant_type': 'password',
+        'clientid': client_id
+    }
+
+    response = requests.post(
+        url=f'{context.auth_url}/api/account/register',
+        headers=headers,
+        params=params,
+        data=data,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
+        verify=context.verify_tls)
+
+    if not response.ok:
+        response.raise_for_status()
+
+    return response
+
+
+def create_admin_user(
+        context: Context,
+        user_email: str,
+        user_password: str,
+        application_sub_domain: str = None,
+        client_id: str = None) -> requests.models.Response:
+    """Create an admin user.
+
+    Args:
+        context (Context): Context object.
+        user_email (str): Admin user email.
+        user_password (str): Admin user password.
+        application_sub_domain (str, optional): Application subdomain. Defaults to None. If None, context.org_name is used.
+        client_id (str, optional): ClientId (Organization name). Defaults to None. If None, context.org_name is used.
+
+    Returns:
+        requests.models.Response: response object.
+    """
+
+    if application_sub_domain is None:
+        application_sub_domain = context.org_name
+
+    if client_id is None:
+        client_id = context.org_name
+
+    headers = {
+        'Authorization': f'Bearer {context.access_token}'
+    }
+
+    invitation_code = get_invitation_code(context, user_email)
+
+    params = {
+        'code': invitation_code
+    }
+
+    data = {
+        'username': user_email,
+        'email': user_email,
+        'password': user_password,
+        'confirmPassword': user_password,
+        'applicationSubDomain': application_sub_domain,
+        'grant_type': 'password',
+        'clientid': client_id
+    }
+
+    response = requests.post(
+        url=f'{context.auth_url}/api/account/registeradmin',
+        headers=headers,
+        params=params,
+        data=data,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
+        verify=context.verify_tls)
+
+    if not response.ok:
+        response.raise_for_status()
+
+    return response

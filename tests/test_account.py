@@ -105,3 +105,43 @@ class TestAccount:
         assert response['EmailDomainName'] == context.user_email.split('@')[1]
         assert response['IsEmailDomainSignupActivated']
         assert response['Name'] == org_name
+
+    def test_create_user(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        user_email = f'testuser_{random.randint(1, 1000000)}@' + \
+            context.user_email.split('@')[1]
+
+        # Act
+
+        response = cluedin.account.create_user(
+            context, user_email, context.user_password)
+        print(response)
+
+        # Assert
+
+        assert response.ok
+
+    def test_create_admin_user(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        user_email = f'testadmin_{random.randint(1, 1000000)}@' + \
+            context.user_email.split('@')[1]
+
+        # Act
+
+        response = cluedin.account.create_admin_user(
+            context, user_email, context.user_password)
+        print(response)
+
+        # Assert
+
+        assert response.ok
