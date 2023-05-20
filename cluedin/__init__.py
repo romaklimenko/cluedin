@@ -8,3 +8,4 @@ from . import env
 from . import gql
 from . import jwt
 from . import public
+from . import vocab
