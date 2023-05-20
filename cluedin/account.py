@@ -317,3 +317,36 @@ def create_admin_user(
         response.raise_for_status()
 
     return response
+
+
+def get_user(context: Context, user_id: str = None) -> dict:
+    """Get user.
+
+    Args:
+        context (Context): Context object.
+        user_id (str, optional): User Id. Defaults to None. If None, the current user is returned.
+
+    Returns:
+        dict: JSON response.
+    """
+
+    headers = {
+        'Authorization': f'Bearer {context.access_token}'
+    }
+
+    params = {}
+
+    if id is not None:
+        params['id'] = user_id
+
+    response = requests.get(
+        url=f'{context.auth_url}/api/account/user',
+        headers=headers,
+        params=params,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
+        verify=context.verify_tls)
+
+    if not response.ok:
+        response.raise_for_status()
+
+    return response.json()

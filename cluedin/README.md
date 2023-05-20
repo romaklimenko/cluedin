@@ -5,6 +5,7 @@
 ## Installation
 
 From [PyPi](https://pypi.org/project/cluedin/):
+
 ```shell
 pip install cluedin
 ```
@@ -17,22 +18,22 @@ Create a JSON file with context configuration to your CluedIn instance:
 
 In this file, parameters have the following meaning:
 
-* `protocol` - `http` if your CluedIn instance is not secured with a TLS certicate. Otherwise, `https` by default.
-* `domain` – CluedIn instance domain without the Organization prefix.
-* `org_name` – the name of Organization (a.k.a. Organization prefix).
-* `user_email` – the user's email.
-* `user_password` – the user's password.
-* `verify_tls` – `false`, if an unknown CA signs the TLS certificate. Otherwise, `true` by default.
+- `protocol` - `http` if your CluedIn instance is not secured with a TLS certicate. Otherwise, `https` by default.
+- `domain` – CluedIn instance domain without the Organization prefix.
+- `org_name` – the name of Organization (a.k.a. Organization prefix).
+- `user_email` – the user's email.
+- `user_password` – the user's password.
+- `verify_tls` – `false`, if an unknown CA signs the TLS certificate. Otherwise, `true` by default.
 
 Here is an example of a file for a CluedIn instance running locally from a [Home](https://cluedin-io.github.io/Home/) repository:
 
 ```json
 {
-    "protocol": "http",
-    "domain": "127.0.0.1.nip.io",
-    "org_name": "foobar",
-    "user_email": "admin@foobar.com",
-    "user_password": "Foobar23!"
+  "protocol": "http",
+  "domain": "127.0.0.1.nip.io",
+  "org_name": "foobar",
+  "user_email": "admin@foobar.com",
+  "user_password": "Foobar23!"
 }
 ```
 
@@ -42,10 +43,10 @@ Alternatively, to provide email and password, you can obtain an API access token
 
 ```json
 {
-    "protocol": "http",
-    "domain": "127.0.0.1.nip.io",
-    "org_name": "foobar",
-    "access_token": "..."
+  "protocol": "http",
+  "domain": "127.0.0.1.nip.io",
+  "org_name": "foobar",
+  "access_token": "..."
 }
 ```
 
@@ -129,10 +130,11 @@ entities = cluedin.gql.entries(context, query, variables):
 - `cluedin.account.is_organization_available(context: Context, org_name: str) -> bool` – checks if a given Organization name is available. Returns a Boolean.
 - `cluedin.account.is_user_available_response(context: Context, user_email: str, org_name: str) -> dict` – checks, if a user with a given email can be created or this email is already reserved. This method returns a JSON-response serialized into a `dict`.
 - `cluedin.account.is_user_available(context: Context, user_email: str, org_name: str) -> bool` – checks, if a user with a given email can be created or this email is already reserved. This method returns a JSON-response serialized into a `dict`. Returns a Boolean.
-- `get_invitation_code(context: Context, email: str) -> str` – returns an invitation code for a given email.
-- `create_organization(context: Context, user_email: str, password: str, org_name: str, org_sub_domain: str = None, email_domain: str = None, allow_email_domain_signup: bool = True, new_account_access_key: str = None) -> dict` - creates a new Organization. This method returns a JSON-response serialized into a `dict`.
-- `create_user(context: Context, user_email: str, user_password: str) -> requests.models.Response` – creates a new user. This method returns `requests.models.Response`.
-- `create_admin_user(context: Context, user_email: str, user_password: str) -> requests.models.Response` – creates a new admin user. This method returns `requests.models.Response`.
+- `cluedin.account.get_invitation_code(context: Context, email: str) -> str` – returns an invitation code for a given email.
+- `cluedin.account.create_organization(context: Context, user_email: str, password: str, org_name: str, org_sub_domain: str = None, email_domain: str = None, allow_email_domain_signup: bool = True, new_account_access_key: str = None) -> dict` - creates a new Organization. This method returns a JSON-response serialized into a `dict`.
+- `cluedin.account.create_user(context: Context, user_email: str, user_password: str) -> requests.models.Response` – creates a new user. This method returns `requests.models.Response`.
+- `cluedin.account.create_admin_user(context: Context, user_email: str, user_password: str) -> requests.models.Response` – creates a new admin user. This method returns `requests.models.Response`.
+- `cluedin.account.get_user(context: Context, user_id: str = None) -> dict` – returns a user by ID. If `user_id` is nor provided, the current user is returned. This method returns a JSON-response serialized into a `dict`.
 
 ### GraphQL
 

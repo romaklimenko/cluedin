@@ -145,3 +145,35 @@ class TestAccount:
         # Assert
 
         assert response.ok
+
+    def test_get_user(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        # Act
+
+        response = cluedin.account.get_user(context)
+
+        # Assert
+
+        assert response['client']['Email'] == context.user_email
+
+    def test_get_user_by_id(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+        user_id = cluedin.account.get_user(context)['client']['Id']
+
+        # Act
+
+        response = cluedin.account.get_user(context, user_id=user_id)
+
+        # Assert
+
+        assert response['client']['Id'] == user_id
+        assert response['client']['Email'] == context.user_email
