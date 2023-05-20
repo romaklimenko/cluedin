@@ -149,3 +149,7 @@ entities = cluedin.gql.entries(context, query, variables):
 
 - `cluedin.public.post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str` – posts a clue in XML or JSON format. This method returns an operation result as a string.
 - `cluedin.public.restore_user_entities(context: Context) -> list` – if you accidentally deleted `/Infrastructure/User` entities, this method gets all users and restores entities for those who miss them.
+
+### Vocabulary
+
+- `cluedin.vocab.get_vocab_keys(context: Context) -> list` – gets all vocabulary keys.
