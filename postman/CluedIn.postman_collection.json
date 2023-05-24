@@ -215,7 +215,7 @@
 										"header": [
 											{
 												"key": "x-cluedin-newaccountaccesskey",
-												"value": "{{newaccountaccesskey}}",
+												"value": "{{new_account_access_key}}",
 												"description": "Used in Kubernetes to protect the endpoint. See `cluedin-new-organization-access-key` secret.",
 												"type": "text"
 											}
@@ -287,7 +287,7 @@
 									"response": []
 								},
 								{
-									"name": "Get an Invite Code",
+									"name": "Get Invitation Code",
 									"event": [
 										{
 											"listen": "test",
@@ -333,12 +333,12 @@
 											"urlencoded": [
 												{
 													"key": "username",
-													"value": "{{user}}",
+													"value": "{{user_email}}",
 													"type": "text"
 												},
 												{
 													"key": "email",
-													"value": "{{user}}",
+													"value": "{{user_email}}",
 													"type": "text"
 												},
 												{
@@ -358,12 +358,12 @@
 												},
 												{
 													"key": "applicationSubDomain",
-													"value": "{{organization}}",
+													"value": "{{org_name}}",
 													"type": "text"
 												},
 												{
 													"key": "clientid",
-													"value": "{{organization}}",
+													"value": "{{org_name}}",
 													"type": "text"
 												}
 											]
@@ -390,7 +390,85 @@
 									"response": []
 								},
 								{
+									"name": "Create an Admin",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "{{user_email}}",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "{{user_email}}",
+													"type": "text"
+												},
+												{
+													"key": "grant_type",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "confirmpassword",
+													"value": "{{password}}",
+													"type": "text"
+												},
+												{
+													"key": "applicationSubDomain",
+													"value": "{{org_name}}",
+													"type": "text"
+												},
+												{
+													"key": "clientid",
+													"value": "{{org_name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{auth_url}}/api/account/registeradmin?code={{invite_code}}",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"registeradmin"
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "{{invite_code}}",
+													"description": "Uppercased MD5 of the user's email."
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "Get current User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = JSON.parse(responseBody);",
+													"postman.setEnvironmentVariable(\"user_id\", data['client']['Id']);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"method": "GET",
 										"header": [],
@@ -403,6 +481,56 @@
 												"api",
 												"account",
 												"user"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get User by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth_url}}/api/account/user?id={{user_id}}",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"user"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{user_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Organization by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{auth_url}}/api/account/client?clientId={{org_id}}",
+											"host": [
+												"{{auth_url}}"
+											],
+											"path": [
+												"api",
+												"account",
+												"client"
+											],
+											"query": [
+												{
+													"key": "clientId",
+													"value": "{{org_id}}"
+												}
 											]
 										}
 									},
