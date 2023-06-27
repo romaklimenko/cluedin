@@ -17,7 +17,7 @@ class Context:
                  org_url: str = None,
                  auth_url: str = None,
                  api_url: str = None,
-                 gql_url: str = None,
+                 gql_org_url: str = None,
                  gql_api_url: str = None,
                  public_api_url: str = None,
                  verify_tls: bool = True) -> None:
@@ -45,10 +45,10 @@ class Context:
         else:
             self.api_url = api_url
 
-        if gql_url is None:
-            self.gql_url = f'{self.org_url}/graphql'
+        if gql_org_url is None:
+            self.gql_org_url = f'{self.org_url}/graphql'
         else:
-            self.gql_url = gql_url
+            self.gql_org_url = gql_org_url
 
         if gql_api_url is None:
             self.gql_api_url = f'{self.api_url}/graphql'
@@ -59,7 +59,7 @@ class Context:
             self.public_api_url = f'{self.org_url}/public/api'
         else:
             self.public_api_url = public_api_url
-            
+
         self.verify_tls = verify_tls
 
     @classmethod
@@ -81,7 +81,7 @@ class Context:
         org_url: str = None
         auth_url: str = None
         api_url: str = None
-        gql_url: str = None
+        gql_org_url: str = None
         gql_api_url: str = None
         public_api_url: str = None
         verify_tls: bool = True
@@ -115,8 +115,12 @@ class Context:
         if 'api_url' in context_dict:
             api_url = context_dict['api_url']
 
+        # TODO: Remove in v3.0.0
         if 'gql_url' in context_dict:
-            gql_url = context_dict['gql_url']
+            gql_org_url = context_dict['gql_url']
+
+        if 'gql_org_url' in context_dict:
+            gql_org_url = context_dict['gql_org_url']
 
         if 'gql_api_url' in context_dict:
             gql_api_url = context_dict['gql_api_url']
@@ -136,7 +140,7 @@ class Context:
                    org_url=org_url,
                    auth_url=auth_url,
                    api_url=api_url,
-                   gql_url=gql_url,
+                   gql_org_url=gql_org_url,
                    gql_api_url=gql_api_url,
                    public_api_url=public_api_url,
                    verify_tls=verify_tls)

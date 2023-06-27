@@ -79,7 +79,37 @@ class TestGql:
 
         # Assert
 
-        assert str(exception.value).startswith('400 Client Error: Bad Request for url:')
+        assert str(exception.value).startswith(
+            '400 Client Error: Bad Request for url:')
+
+    def test_org_gql(self):
+
+        # Arrange
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        query = """
+            {
+              notification {
+                serverStatus
+                __typename
+              }
+            }
+        """
+
+        variables = { }
+
+        # Act
+
+        response = cluedin.gql.org_gql(context, query, variables)
+
+        assert 'data' in response
+        assert 'notification' in response['data']
+        assert 'serverStatus' in response['data']['notification']
+        assert 'server' in response['data']['notification']['serverStatus']
+        assert 'dataSource' in response['data']['notification']['serverStatus']
+        assert 'mapping' in response['data']['notification']['serverStatus']
+        assert 'prepare' in response['data']['notification']['serverStatus']
 
     def test_entries(self):
 

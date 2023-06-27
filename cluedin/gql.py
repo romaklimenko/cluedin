@@ -42,6 +42,44 @@ def gql(context: Context, query: str, variables: dict = None) -> dict:
     return response.json()
 
 
+def org_gql(context: Context, query: str, variables: dict = None) -> dict:
+    """Send a GraphQL query to CluedIn Organization endpoint.
+
+    Args:
+        context (Context): Context object.
+        query (str): GraphQL query.
+        variables (dict, optional): A dicrionary of variables to be used in the query.
+            Defaults to {}.
+
+    Returns:
+        dict: JSON response.
+    """
+    headers = {
+        'Authorization': f'Bearer {context.access_token}'
+    }
+
+    if variables is None:
+        variables = {}
+
+    json = {
+        'query': query,
+        'variables': variables
+    }
+
+    response = requests.post(
+        url=context.gql_org_url,
+        json=json,
+        headers=headers,
+        timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
+        verify=context.verify_tls
+    )
+
+    if not response.ok:
+        response.raise_for_status()
+
+    return response.json()
+
+
 def entries(context: Context, query: str, variables: dict = None) -> list:
     """Get entries from a GraphQL query. This function is a generator.
         It uses the cursor to get the next page of entries.
