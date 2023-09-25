@@ -568,7 +568,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: DATE) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: FIELDS, sortFields: {field: \"id\", direction: ASCENDING}) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
 										"variables": ""
 									}
 								},
@@ -604,7 +604,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query deleteEntities($cursor: PagingCursor) {\r\n  search(\r\n    query: \"entityType:{{entity_type}}\"\r\n    sort: DATE\r\n    cursor: $cursor\r\n    pageSize: 10000\r\n  ) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n          deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"query": "query deleteEntities($cursor: PagingCursor) {\r\n  search(\r\n    query: \"entityType:{{entity_type}}\"\r\n    sort: FIELDS\r\n    cursor: $cursor\r\n    pageSize: 10000\r\n    sortFields: {field: \"id\", direction: ASCENDING}\r\n  ) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n          deleteEntity\r\n      }\r\n    }\r\n  }\r\n}\r\n",
 										"variables": "{\n  \"cursor\": \"{{cursor}}\"\n}"
 									}
 								},
@@ -640,7 +640,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: DATE) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        postProcess\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"query": "{\r\n  search(query: \"entityType:{{entity_type}}\", pageSize: 10000, sort: FIELDS, sortFields: {field: \"id\", direction: ASCENDING}) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      actions {\r\n        postProcess\r\n      }\r\n    }\r\n  }\r\n}\r\n",
 										"variables": ""
 									}
 								},
@@ -813,7 +813,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {\r\n  search(query: $query, sort: DATE, cursor: $cursor, pageSize: $pageSize) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      properties\r\n    }\r\n  }\r\n}\r\n",
+										"query": "query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {\r\n  search(query: $query, sort: FIELDS, cursor: $cursor, pageSize: $pageSize, sortFields: {field: \"id\", direction: ASCENDING}) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      properties\r\n    }\r\n  }\r\n}\r\n",
 										"variables": "{\n  \"query\": \"entityType:{{entity_type}}\",\n  \"pageSize\": 10000\n}"
 									}
 								},
