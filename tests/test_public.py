@@ -17,7 +17,13 @@ class TestPublic:
 
         query = """
             query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
-              search(query: $query, sort: DATE, cursor: $cursor, pageSize: $pageSize) {
+              search(
+                query: $query,
+                sort: FIELDS,
+                cursor: $cursor,
+                pageSize: $pageSize
+                sortFields: {field: "id", direction: ASCENDING}
+              ) {
                 totalResults
                 cursor
                 entries {
