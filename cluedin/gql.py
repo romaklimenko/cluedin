@@ -80,7 +80,7 @@ def org_gql(context: Context, query: str, variables: dict = None) -> dict:
     return response.json()
 
 
-def entries(context: Context, query: str, variables: dict = None) -> list:
+def entries(context: Context, query: str, variables: dict = None, flat=False) -> list:
     """Get entries from a GraphQL query. This function is a generator.
         It uses the cursor to get the next page of entries.
 
@@ -95,6 +95,24 @@ def entries(context: Context, query: str, variables: dict = None) -> list:
     Yields:
         Iterator[list]: Iterator of entries.
     """
+
+    def flatten_properties(d):
+        if 'properties' not in d:
+            return d
+
+        for k, v in d['properties'].items():
+            if k == 'attribute-type':
+                continue
+
+            if k.startswith('property-'):
+                k = k[9:]  # len('property-') == 9
+
+            d[k] = v
+
+        del d['properties']
+
+        return d
+
     if variables is None:
         variables = {}
 
@@ -113,6 +131,8 @@ def entries(context: Context, query: str, variables: dict = None) -> list:
             return
 
         for entry in page_entries:
+            if flat:
+                entry = flatten_properties(entry)
             yield entry
 
         variables['cursor'] = cursor
