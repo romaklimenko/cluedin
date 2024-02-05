@@ -151,7 +151,12 @@ entities = cluedin.gql.entries(context, query, variables):
 
 - `cluedin.gql.gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request and returns a response.
 - `cluedin.gql.org_gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request to Organization endpoint and returns a response.
-- `cluedin.gql.entries(context: Context, query: str, variables: dict = None) -> list` – returns entries from a GraphQL search query. If cursor is requested in the GraphQL query (see the example above and tests), then it proceeds to next pages to return all results.
+- `cluedin.gql.entries(context: Context, query: str, variables: dict = None, flat=False) -> list` – returns entries from a GraphQL search query. If cursor is requested in the GraphQL query (see the example above and tests), then it proceeds to next pages to return all results. If `flat` is `True`, then it flattens the `properties` dictionary of each returned entity.
+
+### JSON
+
+- `dump(file: str, obj: Any) -> None` – serialize obj as a JSON formatted stream to file.
+- `load(file: str) -> Any` – deserialize file to a Python object.
 
 ### JWT
 
