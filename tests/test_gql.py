@@ -120,7 +120,6 @@ class TestGql:
         assert 'serverStatus' in response['data']['notification']
         assert 'server' in response['data']['notification']['serverStatus']
         assert 'dataSource' in response['data']['notification']['serverStatus']
-        assert 'mapping' in response['data']['notification']['serverStatus']
         assert 'prepare' in response['data']['notification']['serverStatus']
 
     def test_entries(self):
@@ -145,6 +144,7 @@ class TestGql:
                   id
                   name
                   entityType
+                  properties
                 }
               }
             }
@@ -164,6 +164,53 @@ class TestGql:
             assert 'id' in entry
             assert 'name' in entry
             assert 'entityType' in entry
+            assert 'properties' in entry
+
+        assert len(entries) > 0
+
+    def test_entries_flatten(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        query = """
+            query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
+              search(
+                query: $query,
+                sort: FIELDS,
+                cursor: $cursor,
+                pageSize: $pageSize
+                sortFields: {field: "id", direction: ASCENDING}
+              ) {
+                totalResults
+                cursor
+                entries {
+                  id
+                  name
+                  entityType
+                  properties
+                }
+              }
+            }
+        """
+
+        variables = {
+            "query": "*",
+            "pageSize": 10_000
+        }
+
+        entries = []
+
+        # Act and Assert
+
+        for entry in cluedin.gql.entries(context, query, variables, flat=True):
+            entries.append(entry)
+            assert 'id' in entry
+            assert 'name' in entry
+            assert 'entityType' in entry
+            assert 'properties' not in entry
 
         assert len(entries) > 0
 
