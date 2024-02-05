@@ -1576,7 +1576,7 @@
 														"method": "POST",
 														"header": [],
 														"url": {
-															"raw": "{{api_url}}/admin/commands/resync/datastores/all?organizationId={{organization_id}}",
+															"raw": "{{api_url}}/admin/commands/resync/datastores/all?organizationId={{org_id}}",
 															"host": [
 																"{{api_url}}"
 															],
@@ -1590,7 +1590,7 @@
 															"query": [
 																{
 																	"key": "organizationId",
-																	"value": "{{organization_id}}"
+																	"value": "{{org_id}}"
 																}
 															]
 														}
@@ -1603,7 +1603,7 @@
 														"method": "POST",
 														"header": [],
 														"url": {
-															"raw": "{{api_url}}/admin/commands/resync/datastores/entity?organizationId={{organization_id}}&id={{entity_id}}",
+															"raw": "{{api_url}}/admin/commands/resync/datastores/entity?organizationId={{org_id}}&id={{entity_id}}",
 															"host": [
 																"{{api_url}}"
 															],
@@ -1617,7 +1617,7 @@
 															"query": [
 																{
 																	"key": "organizationId",
-																	"value": "{{organization_id}}"
+																	"value": "{{org_id}}"
 																},
 																{
 																	"key": "id",
@@ -1865,14 +1865,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_url}}/organization/securityfilter/{{organization_id}}",
+									"raw": "{{api_url}}/organization/securityfilter/{{org_id}}",
 									"host": [
 										"{{api_url}}"
 									],
 									"path": [
 										"organization",
 										"securityfilter",
-										"{{organization_id}}"
+										"{{org_id}}"
 									]
 								}
 							},
