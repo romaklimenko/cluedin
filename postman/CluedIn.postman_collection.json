@@ -1860,19 +1860,77 @@
 							]
 						},
 						{
+							"name": "Configuration Value",
+							"item": [
+								{
+									"name": "Get a Configuration Value",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api_url}}/organization/configurationvalue/{{org_id}}?configurationKey=Feature.Search.StrongTyped",
+											"host": [
+												"{{api_url}}"
+											],
+											"path": [
+												"organization",
+												"configurationvalue",
+												"{{org_id}}"
+											],
+											"query": [
+												{
+													"key": "configurationKey",
+													"value": "Feature.Search.StrongTyped"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Set a Configuration Value",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"configurationKey\": \"Feature.Search.StrongTyped\",\r\n    \"value\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api_url}}/organization/configurationvalue/{{org_id}}",
+											"host": [
+												"{{api_url}}"
+											],
+											"path": [
+												"organization",
+												"configurationvalue",
+												"{{org_id}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "Get Global Security Filter Setting",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_url}}/organization/securityfilter/{{org_id}}",
+									"raw": "{{api_url}}/organization/securityfilter/{{organization_id}}",
 									"host": [
 										"{{api_url}}"
 									],
 									"path": [
 										"organization",
 										"securityfilter",
-										"{{org_id}}"
+										"{{organization_id}}"
 									]
 								}
 							},
