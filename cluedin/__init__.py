@@ -10,4 +10,5 @@ from . import gql
 from . import json
 from . import jwt
 from . import public
+from . import rules
 from . import vocab
