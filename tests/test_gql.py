@@ -109,7 +109,7 @@ class TestGql:
             }
         """
 
-        variables = { }
+        variables = {}
 
         # Act
 
