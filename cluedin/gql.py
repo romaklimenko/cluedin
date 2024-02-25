@@ -1,3 +1,5 @@
+from typing import Any, Generator
+
 import requests
 
 from .context import Context
@@ -80,7 +82,8 @@ def org_gql(context: Context, query: str, variables: dict = None) -> dict:
     return response.json()
 
 
-def entries(context: Context, query: str, variables: dict = None, flat=False) -> list:
+def entries(context: Context, query: str, variables: dict = None, flat=False) \
+    -> Generator[Any, Any, Any]:
     """Get entries from a GraphQL query. This function is a generator.
         It uses the cursor to get the next page of entries.
 
@@ -90,10 +93,7 @@ def entries(context: Context, query: str, variables: dict = None, flat=False) ->
         variables (dict, optional): A dicrionary of variables to be used in the query.
 
     Returns:
-        list: List of entries.
-
-    Yields:
-        Iterator[list]: Iterator of entries.
+        Generator[Any, Any, Any]: Iterator of entries.
     """
 
     def flatten_properties(d):

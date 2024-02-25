@@ -1,7 +1,7 @@
 from enum import Enum
 
-from .context import Context
-from .gql import org_gql
+from ..context import Context
+from ..gql import org_gql
 
 
 class RuleScope(Enum):

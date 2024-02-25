@@ -1,0 +1,268 @@
+{
+  "data": {
+    "management": {
+      "id": "management",
+      "rule": {
+        "id": "939480a0-a245-443a-b69d-8008c1551b36",
+        "name": "Adult Movies",
+        "description": null,
+        "isActive": true,
+        "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "modifiedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "createdAt": "2024-02-22T19:29:08.2109097+00:00",
+        "modifiedAt": "2024-02-22T19:42:42.7038738+00:00",
+        "condition": {
+          "objectTypeId": "00000000-0000-0000-0000-000000000000",
+          "condition": "AND",
+          "field": null,
+          "id": "c6bbac74-23fa-4f1d-8ef3-e1bb095c6464",
+          "operator": "00000000-0000-0000-0000-000000000000",
+          "rules": [
+            {
+              "objectTypeId": "3be85371-cbe0-4180-8820-73e6e37a6c32",
+              "condition": "AND",
+              "field": "EntityType",
+              "id": "14f7d60a-2534-46c7-adbb-e223c8b90593",
+              "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+              "rules": [],
+              "type": "string",
+              "value": ["/IMDb/Title"]
+            },
+            {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "OR",
+              "field": "",
+              "id": "9f1ed47e-a979-4fba-ac73-c0b8c3ea6cf4",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [
+                {
+                  "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                  "condition": "AND",
+                  "field": "Properties[imdb.title.titleType]",
+                  "id": "10eadf3b-bd8c-47e1-ab42-92dae2a1b161",
+                  "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+                  "rules": [],
+                  "type": "string",
+                  "value": ["movie"]
+                },
+                {
+                  "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                  "condition": "AND",
+                  "field": "Properties[imdb.title.titleType]",
+                  "id": "868eb26e-4969-4fb7-ad81-1e681e70f6f2",
+                  "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+                  "rules": [],
+                  "type": "string",
+                  "value": ["video"]
+                }
+              ],
+              "type": "rule",
+              "value": null
+            },
+            {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "AND",
+              "field": "",
+              "id": "374214b4-0ff6-450f-a237-3537e875c29e",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [
+                {
+                  "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                  "condition": "AND",
+                  "field": "Properties[imdb.title.isAdult]",
+                  "id": "987c5088-50fa-4817-83e7-b4ebadd1e1d1",
+                  "operator": "04f2d73a-c908-4bc3-a7d5-1774b7db44dd",
+                  "rules": [],
+                  "type": "boolean",
+                  "value": []
+                }
+              ],
+              "type": "rule",
+              "value": null
+            }
+          ],
+          "type": null,
+          "value": null
+        },
+        "actions": null,
+        "rules": [
+          {
+            "id": "9fa579d8-1eac-4f13-bd74-f238949f968b",
+            "name": "Mark as NSFW Movie",
+            "description": null,
+            "organizationId": "f8372b04-d6da-48c7-99c7-1467db6fcb50",
+            "type": "ProcessingRule",
+            "order": 1,
+            "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "createdAt": "2024-02-22T19:42:42.7110823+00:00",
+            "modifiedBy": null,
+            "modifiedAt": null,
+            "isActive": false,
+            "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "conditions": {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "AND",
+              "field": null,
+              "id": "e34a2472-734f-42f4-9eec-e8a6afc634fc",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [
+                {
+                  "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                  "condition": "AND",
+                  "field": "Properties[imdb.title.titleType]",
+                  "id": "f46b11d4-e45e-46eb-bcac-19c955f818db",
+                  "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+                  "rules": [],
+                  "type": "string",
+                  "value": ["movie"]
+                }
+              ],
+              "type": null,
+              "value": null
+            },
+            "actions": [
+              {
+                "name": "Add Tag",
+                "supportsPreview": false,
+                "supportsProcessingRuleScopes": null,
+                "supportsRuleUsages": null,
+                "properties": [
+                  {
+                    "name": "Value",
+                    "type": "System.String",
+                    "kind": "None",
+                    "friendlyType": null,
+                    "friendlyName": "Value",
+                    "defaultValue": null,
+                    "value": "NSFW Movie",
+                    "isStringOnly": false,
+                    "excludedProperties": null,
+                    "isRequired": true
+                  }
+                ],
+                "type": "CluedIn.Rules.Actions.AddTag, CluedIn.Rules"
+              }
+            ]
+          },
+          {
+            "id": "1037fca1-91b7-479b-ad5f-1b283d9d8916",
+            "name": "Mark as NSFW Video",
+            "description": null,
+            "organizationId": "f8372b04-d6da-48c7-99c7-1467db6fcb50",
+            "type": "ProcessingRule",
+            "order": 2,
+            "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "createdAt": "2024-02-22T19:42:42.7500989+00:00",
+            "modifiedBy": null,
+            "modifiedAt": null,
+            "isActive": false,
+            "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "conditions": {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "AND",
+              "field": null,
+              "id": "49b89851-6172-4580-b930-d93a93b9e200",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [
+                {
+                  "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                  "condition": "AND",
+                  "field": "Properties[imdb.title.titleType]",
+                  "id": "4f64a878-61ab-460f-9609-a63f3fdaf13d",
+                  "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+                  "rules": [],
+                  "type": "string",
+                  "value": ["video"]
+                }
+              ],
+              "type": null,
+              "value": null
+            },
+            "actions": [
+              {
+                "name": "Add Tag",
+                "supportsPreview": false,
+                "supportsProcessingRuleScopes": null,
+                "supportsRuleUsages": null,
+                "properties": [
+                  {
+                    "name": "Value",
+                    "type": "System.String",
+                    "kind": "None",
+                    "friendlyType": null,
+                    "friendlyName": "Value",
+                    "defaultValue": null,
+                    "value": "NSFW Video",
+                    "isStringOnly": false,
+                    "excludedProperties": null,
+                    "isRequired": true
+                  }
+                ],
+                "type": "CluedIn.Rules.Actions.AddTag, CluedIn.Rules"
+              }
+            ]
+          },
+          {
+            "id": "ce4b9b9e-0c76-4c9c-a7a1-3b91d660f4e5",
+            "name": "Mark as NSFW",
+            "description": null,
+            "organizationId": "f8372b04-d6da-48c7-99c7-1467db6fcb50",
+            "type": "ProcessingRule",
+            "order": 3,
+            "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "createdAt": "2024-02-22T19:42:42.7505888+00:00",
+            "modifiedBy": null,
+            "modifiedAt": null,
+            "isActive": false,
+            "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "conditions": {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "AND",
+              "field": null,
+              "id": "64017099-c69d-461a-9797-091215014162",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [],
+              "type": null,
+              "value": null
+            },
+            "actions": [
+              {
+                "name": "Add Tag",
+                "supportsPreview": false,
+                "supportsProcessingRuleScopes": null,
+                "supportsRuleUsages": null,
+                "properties": [
+                  {
+                    "name": "Value",
+                    "type": "System.String",
+                    "kind": "None",
+                    "friendlyType": null,
+                    "friendlyName": "Value",
+                    "defaultValue": null,
+                    "value": "NSFW",
+                    "isStringOnly": false,
+                    "excludedProperties": null,
+                    "isRequired": true
+                  }
+                ],
+                "type": "CluedIn.Rules.Actions.AddTag, CluedIn.Rules"
+              }
+            ]
+          }
+        ],
+        "sourceDetail": null,
+        "author": {
+          "id": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+          "username": "rok@cluedin.com",
+          "__typename": "User"
+        },
+        "scope": "DataPart",
+        "isReprocessing": false,
+        "requiresAttention": false,
+        "__typename": "Rule"
+      },
+      "__typename": "Management"
+    }
+  }
+}
