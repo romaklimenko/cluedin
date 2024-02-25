@@ -1,7 +1,7 @@
 import os
 
 # pylint: disable=wrong-import-order
-from .ctx import cluedin
+from ..ctx import cluedin
 from cluedin import Context
 
 
