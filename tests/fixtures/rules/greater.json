@@ -1,0 +1,114 @@
+{
+    "data": {
+        "management": {
+            "id": "management",
+            "rule": {
+                "id": "53685264-19d0-4566-85d5-85a1301117f8",
+                "name": "Greater",
+                "description": null,
+                "isActive": true,
+                "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                "modifiedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                "createdAt": "2024-02-27T15:57:51.9508409+00:00",
+                "modifiedAt": "2024-02-27T16:00:32.8380703+00:00",
+                "condition": {
+                    "objectTypeId": "00000000-0000-0000-0000-000000000000",
+                    "condition": "AND",
+                    "field": null,
+                    "id": "6a9e058e-c4f2-488b-8afb-6c7885a5e70f",
+                    "operator": "00000000-0000-0000-0000-000000000000",
+                    "rules": [
+                        {
+                            "objectTypeId": "3be85371-cbe0-4180-8820-73e6e37a6c32",
+                            "condition": "AND",
+                            "field": "EntityType",
+                            "id": "b4b23600-7203-4cc8-80c2-ef2d19afa7d3",
+                            "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+                            "rules": [],
+                            "type": "string",
+                            "value": [
+                                "/IMDb/Title"
+                            ]
+                        },
+                        {
+                            "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+                            "condition": "AND",
+                            "field": "Properties[imdb.title.runtimeMinutes]",
+                            "id": "eb6ffbb0-50fc-48f6-bd42-2f1270cd010f",
+                            "operator": "85ecec6b-9c45-4365-9614-ef090137098d",
+                            "rules": [],
+                            "type": "integer",
+                            "value": [
+                                "10"
+                            ]
+                        }
+                    ],
+                    "type": null,
+                    "value": null
+                },
+                "actions": null,
+                "rules": [
+                    {
+                        "id": "6e254344-7303-44cd-9d79-f30fa526b3a3",
+                        "name": "Add Tag",
+                        "description": null,
+                        "organizationId": "f8372b04-d6da-48c7-99c7-1467db6fcb50",
+                        "type": "ProcessingRule",
+                        "order": 1,
+                        "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                        "createdAt": "2024-02-27T15:59:32.8377094+00:00",
+                        "modifiedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                        "modifiedAt": "2024-02-27T16:00:32.838183+00:00",
+                        "isActive": false,
+                        "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                        "conditions": {
+                            "objectTypeId": "00000000-0000-0000-0000-000000000000",
+                            "condition": "AND",
+                            "field": null,
+                            "id": "30658a7f-9e29-43ac-a336-d67a9527d039",
+                            "operator": "00000000-0000-0000-0000-000000000000",
+                            "rules": [],
+                            "type": null,
+                            "value": null
+                        },
+                        "actions": [
+                            {
+                                "name": "Add Tag",
+                                "supportsPreview": false,
+                                "supportsProcessingRuleScopes": null,
+                                "supportsRuleUsages": null,
+                                "properties": [
+                                    {
+                                        "name": "Value",
+                                        "type": "System.String",
+                                        "kind": "None",
+                                        "friendlyType": null,
+                                        "friendlyName": "Value",
+                                        "defaultValue": null,
+                                        "value": "Greater",
+                                        "isStringOnly": false,
+                                        "excludedProperties": null,
+                                        "isRequired": true
+                                    }
+                                ],
+                                "type": "CluedIn.Rules.Actions.AddTag, CluedIn.Rules"
+                            }
+                        ]
+                    }
+                ],
+                "sourceDetail": null,
+                "author": {
+                    "id": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+                    "username": "rok@cluedin.com",
+                    "__typename": "User"
+                },
+                "scope": "DataPart",
+                "isReprocessing": true,
+                "requiresAttention": false,
+                "__typename": "Rule"
+            },
+            "__typename": "Management"
+        }
+    }
+}

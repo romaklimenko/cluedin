@@ -1,0 +1,114 @@
+{
+  "data": {
+    "management": {
+      "id": "management",
+      "rule": {
+        "id": "d3ea50b2-0106-417a-9889-188deec2beea",
+        "name": "Not Begins With",
+        "description": null,
+        "isActive": true,
+        "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "modifiedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+        "createdAt": "2024-02-26T17:27:33.9611208+00:00",
+        "modifiedAt": "2024-02-26T19:53:18.5347598+00:00",
+        "condition": {
+          "objectTypeId": "00000000-0000-0000-0000-000000000000",
+          "condition": "AND",
+          "field": null,
+          "id": "10731b9a-d8c4-499d-9f7b-9c24d3bb61e2",
+          "operator": "00000000-0000-0000-0000-000000000000",
+          "rules": [
+            {
+              "objectTypeId": "3be85371-cbe0-4180-8820-73e6e37a6c32",
+              "condition": "AND",
+              "field": "EntityType",
+              "id": "05536025-f0cc-426f-9d92-30dfacd349d0",
+              "operator": "0bafc522-8011-43ba-978a-babe222ba466",
+              "rules": [],
+              "type": "string",
+              "value": [
+                "/IMDb/Title"
+              ]
+            },
+            {
+              "objectTypeId": "011ac3b4-0b46-4f9c-a82a-8c14f9dd642b",
+              "condition": "AND",
+              "field": "Properties[imdb.title.primaryTitle]",
+              "id": "422c5f91-53b7-4f26-813c-ddc907d56c10",
+              "operator": "bbd02195-213e-40e2-9597-65ec05100dfc",
+              "rules": [],
+              "type": "string",
+              "value": [
+                "Home"
+              ]
+            }
+          ],
+          "type": null,
+          "value": null
+        },
+        "actions": null,
+        "rules": [
+          {
+            "id": "5453b4b9-4767-4314-8457-f7f7ceec4348",
+            "name": "Add Tag",
+            "description": null,
+            "organizationId": "f8372b04-d6da-48c7-99c7-1467db6fcb50",
+            "type": "ProcessingRule",
+            "order": 1,
+            "createdBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "createdAt": "2024-02-26T19:53:18.5348509+00:00",
+            "modifiedBy": null,
+            "modifiedAt": null,
+            "isActive": false,
+            "ownedBy": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+            "conditions": {
+              "objectTypeId": "00000000-0000-0000-0000-000000000000",
+              "condition": "AND",
+              "field": null,
+              "id": "0cda23f3-79ac-4c36-bd51-1f7b0be0bad8",
+              "operator": "00000000-0000-0000-0000-000000000000",
+              "rules": [],
+              "type": null,
+              "value": null
+            },
+            "actions": [
+              {
+                "name": "Add Tag",
+                "supportsPreview": false,
+                "supportsProcessingRuleScopes": null,
+                "supportsRuleUsages": null,
+                "properties": [
+                  {
+                    "name": "Value",
+                    "type": "System.String",
+                    "kind": "None",
+                    "friendlyType": null,
+                    "friendlyName": "Value",
+                    "defaultValue": null,
+                    "value": "Not Begins With",
+                    "isStringOnly": false,
+                    "excludedProperties": null,
+                    "isRequired": true
+                  }
+                ],
+                "type": "CluedIn.Rules.Actions.AddTag, CluedIn.Rules"
+              }
+            ]
+          }
+        ],
+        "sourceDetail": null,
+        "author": {
+          "id": "950fd2b5-46e7-4704-b0e7-7a29a31e6648",
+          "username": "rok@cluedin.com",
+          "__typename": "User"
+        },
+        "scope": "DataPart",
+        "isReprocessing": true,
+        "requiresAttention": false,
+        "__typename": "Rule"
+      },
+      "__typename": "Management"
+    }
+  }
+}

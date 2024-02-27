@@ -1,3 +1,6 @@
+import re
+
+
 def get_operator(operator_id):
     """
     Retrieves the operator based on the provided operator ID.
@@ -10,57 +13,57 @@ def get_operator(operator_id):
     """
     rule_operator_by_id = {
         # 'Is Not True'
-        '7cd9d1e6-25d8-4fbf-977a-1d2c3832289d': eval_is_false,
+        '7cd9d1e6-25d8-4fbf-977a-1d2c3832289d': lambda l, r: not is_true(l, r),
         # 'Is True'
-        'bd804d86-f2bc-4bc1-9598-58cb6c490311': eval_is_true,
+        'bd804d86-f2bc-4bc1-9598-58cb6c490311': is_true,
         # 'Begins With'
-        'daf3a318-569f-4baf-a17f-35b4426ae603': eval_not_implemented,
+        'daf3a318-569f-4baf-a17f-35b4426ae603': begins_with,
         # 'Between'
-        '566bc291-df6a-427c-b7f4-00f8766d37a2': eval_not_implemented,
+        '566bc291-df6a-427c-b7f4-00f8766d37a2': between,
         # 'Contains'
-        '4988d076-3ec1-4414-9f56-5b9b30e25f72': eval_not_implemented,
+        '4988d076-3ec1-4414-9f56-5b9b30e25f72': contains,
         # 'Ends With'
-        'ff9a47ac-8e3c-4123-80ee-e0b660aa5f9f': eval_not_implemented,
+        'ff9a47ac-8e3c-4123-80ee-e0b660aa5f9f': ends_with,
         # 'Equals'
-        '0bafc522-8011-43ba-978a-babe222ba466': eval_equals,
+        '0bafc522-8011-43ba-978a-babe222ba466': equals,
         # 'Exists'
-        '306e5d29-832f-41e7-a6db-1c02eb5ebf74': eval_not_implemented,
+        '306e5d29-832f-41e7-a6db-1c02eb5ebf74': lambda l, r: not is_null(l, r),
         # 'Greater'
-        '85ecec6b-9c45-4365-9614-ef090137098d': eval_not_implemented,
+        '85ecec6b-9c45-4365-9614-ef090137098d': greater,
         # 'Greater or Equal'
-        '5a2d1185-7fd8-4dda-9d33-7f69e42e9147': eval_not_implemented,
+        '5a2d1185-7fd8-4dda-9d33-7f69e42e9147': greater_or_equal,
         # 'In'
-        '31feed84-ce0e-435f-ba94-ce01b9c7bd15': eval_not_implemented,
+        '31feed84-ce0e-435f-ba94-ce01b9c7bd15': in_list,
         # 'Is False'
-        'dfbfc760-69ea-4241-b33e-0425c2a51688': eval_is_false,
+        'dfbfc760-69ea-4241-b33e-0425c2a51688': lambda l, r: not is_true(l, r),
         # 'Is Not Null'
-        'a42a9f87-7944-4d07-b1f3-d2f404bc4fd7': eval_not_implemented,
+        'a42a9f87-7944-4d07-b1f3-d2f404bc4fd7': lambda l, r: not is_null(l, r),
         # 'Is Null'
-        '9ad76320-021e-4211-9e9a-8b148c9c600d': eval_not_implemented,
+        '9ad76320-021e-4211-9e9a-8b148c9c600d': is_null,
         # 'Is True'
-        '04f2d73a-c908-4bc3-a7d5-1774b7db44dd': eval_is_true,
+        '04f2d73a-c908-4bc3-a7d5-1774b7db44dd': is_true,
         # 'Less'
-        '0de353ce-bbe4-4a27-8e20-0dc21947e987': eval_not_implemented,
+        '0de353ce-bbe4-4a27-8e20-0dc21947e987': less,
         # 'Less or Equal'
-        '42d4d22d-e37a-4c5f-96eb-7ae59513f80f': eval_not_implemented,
+        '42d4d22d-e37a-4c5f-96eb-7ae59513f80f': less_or_equal,
         # 'Matches pattern'
-        '4e4782d7-8c17-47c1-9797-37434fce0c77': eval_not_implemented,
+        '4e4782d7-8c17-47c1-9797-37434fce0c77': matches_pattern,
         # 'Not Begins With'
-        'bbd02195-213e-40e2-9597-65ec05100dfc': eval_not_implemented,
+        'bbd02195-213e-40e2-9597-65ec05100dfc': lambda l, r: not begins_with(l, r),
         # 'Not Between'
-        '5642150e-fa0a-462c-a230-619d97cb3f8b': eval_not_implemented,
+        '5642150e-fa0a-462c-a230-619d97cb3f8b': lambda l, r: not between(l, r),
         # 'Not Contains'
-        '4af53db0-acdb-44a6-89a1-40fa8ef05cde': eval_not_implemented,
+        '4af53db0-acdb-44a6-89a1-40fa8ef05cde': lambda l, r: not contains(l, r),
         # 'Not Ends With'
-        '3527ff72-bdd4-4bb4-b964-f18898d5a82d': eval_not_implemented,
+        '3527ff72-bdd4-4bb4-b964-f18898d5a82d': lambda l, r: not ends_with(l, r),
         # 'Not Equal'
-        '4f7f2b0f-155a-4208-b849-3e972f5d89d2': eval_not_equals,
+        '4f7f2b0f-155a-4208-b849-3e972f5d89d2': lambda l, r: not equals(l, r),
         # 'Does Not Exist'
-        '16b2dc07-94e3-4c29-bc60-a7a1d25de53b': eval_not_implemented,
+        '16b2dc07-94e3-4c29-bc60-a7a1d25de53b': is_null,
         # 'Not In'
-        '25c16d50-d170-4295-ad85-c2571431794a': eval_not_implemented,
+        '25c16d50-d170-4295-ad85-c2571431794a': lambda l, r: not in_list(l, r),
         # 'Does not match pattern'
-        '9253eea0-5975-460a-8373-dd6ff57d4e65': eval_not_implemented,
+        '9253eea0-5975-460a-8373-dd6ff57d4e65': lambda l, r: not matches_pattern(l, r)
     }
 
     if operator_id in rule_operator_by_id:
@@ -69,21 +72,69 @@ def get_operator(operator_id):
     raise ValueError(f"Operator ID '{id}' not found.")
 
 
-def eval_not_implemented(left, right):
+def begins_with(left, right):
     """
-    Raises a NotImplementedError with a message indicating that the operator is not implemented.
+    Evaluates if the left operand begins with the right operand.
 
     Args:
-        left: The left operand of the operator.
-        right: The right operand of the operator.
+        left: The left operand.
+        right: The right operand.
 
-    Raises:
-        NotImplementedError: If the operator is not implemented.
+    Returns:
+        True if the left operand begins with the right operand, False otherwise.
     """
-    raise NotImplementedError("Operator not implemented")
+    if left is None:
+        return False
+    return str(left).lower().startswith(str(right).lower())
 
 
-def eval_equals(left, right):
+def not_begins_with(left, right):
+    """
+    Evaluates if the left operand does not begin with the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand does not begin with the right operand, False otherwise.
+    """
+    return not begins_with(left, right)
+
+
+def contains(left, right):
+    """
+    Evaluates if the left operand contains the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand contains the right operand, False otherwise.
+    """
+    if left is None:
+        return False
+    return str(right).lower() in str(left).lower()
+
+
+def ends_with(left, right):
+    """
+    Evaluates if the left operand ends with the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand ends with the right operand, False otherwise.
+    """
+    if left is None:
+        return False
+    return str(left).lower().endswith(str(right).lower())
+
+
+def equals(left, right):
     """
     Evaluates if the left operand is equal to the right operand.
 
@@ -94,24 +145,25 @@ def eval_equals(left, right):
     Returns:
         True if the left operand is equal to the right operand, False otherwise.
     """
-    return left == right
+    if left is None or right is None:
+        return False
+    return str(left.lower()) == str(right.lower())
 
 
-def eval_not_equals(left, right):
+def is_null(left, _):
     """
-    Evaluates if the left value is not equal to the right value.
+    Evaluates if the given value is null.
 
     Args:
-        left: The left value to compare.
-        right: The right value to compare.
+        left: The value to be evaluated.
 
     Returns:
-        True if the left value is not equal to the right value, False otherwise.
+        bool: True if the value is null, False otherwise.
     """
-    return not eval_equals(left, right)
+    return left is None
 
 
-def eval_is_true(left, _):
+def is_true(left, _):
     """
     Evaluates if the left operand is true.
 
@@ -125,14 +177,113 @@ def eval_is_true(left, _):
     return left
 
 
-def eval_is_false(left, _):
+def matches_pattern(left, right):
     """
-    Evaluates if the given value is False.
+    Evaluates if the left operand matches the right operand.
 
     Args:
-        left: The value to be evaluated.
+        left: The left operand.
+        right: The right operand.
 
     Returns:
-        bool: True if the value is False, False otherwise.
+        True if the left operand matches the right operand, False otherwise.
     """
-    return not left
+    if left is None:
+        return False
+    return bool(re.match(right, left, re.IGNORECASE))
+
+
+def in_list(left, right):
+    """
+    Evaluates if the left operand is in the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is in the right operand, False otherwise.
+    """
+    if left is None:
+        return False
+    return any(str(left).lower() == str(item).lower() for item in right)
+
+
+def greater(left, right):
+    """
+    Evaluates if the left operand is greater than the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is greater than the right operand, False otherwise.
+    """
+    if left is None or right is None:
+        return False
+    return left > right
+
+
+def greater_or_equal(left, right):
+    """
+    Evaluates if the left operand is greater than or equal to the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is greater than or equal to the right operand, False otherwise.
+    """
+    if left is None or right is None:
+        return False
+    return left >= right
+
+
+def less(left, right):
+    """
+    Evaluates if the left operand is less than the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is less than the right operand, False otherwise.
+    """
+    if left is None or right is None:
+        return False
+    return left < right
+
+
+def less_or_equal(left, right):
+    """
+    Evaluates if the left operand is less than or equal to the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is less than or equal to the right operand, False otherwise.
+    """
+    if left is None or right is None:
+        return False
+    return left <= right
+
+
+def between(left, right):
+    """
+    Evaluates if the left operand is between the right operand.
+
+    Args:
+        left: The left operand.
+        right: The right operand.
+
+    Returns:
+        True if the left operand is between the right operand, False otherwise.
+    """
+    if left is None or right is None:
+        return False
+    return right[0] <= left <= right[1]

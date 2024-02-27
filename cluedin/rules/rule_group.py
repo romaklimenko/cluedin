@@ -47,7 +47,8 @@ class RuleGroup:
     @staticmethod
     def get_rule_object(rule):
         """
-        Returns a RuleGroup object if the 'rule' dictionary contains a 'rules' key with non-empty value,
+        Returns a RuleGroup object
+        if the 'rule' dictionary contains a 'rules' key with non-empty value,
         otherwise returns a Rule object.
 
         Args:

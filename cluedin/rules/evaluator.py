@@ -8,10 +8,12 @@ class Evaluator:
     Class representing an evaluator for rule sets.
 
     Args:
-        rule_set (str or dict): The rule set to be evaluated. If a string is provided, it will be parsed as JSON.
+        rule_set (str or dict): The rule set to be evaluated.
+        If a string is provided, it will be parsed as JSON.
 
     Methods:
-        get_matching_objects(objects): Returns a list of objects that match the rules in the rule set.
+        get_matching_objects(objects):
+        Returns a list of objects that match the rules in the rule set.
         object_matches_rules(obj): Checks if an object matches the rules in the rule set.
 
     """
@@ -35,13 +37,13 @@ class Evaluator:
         return list(filter(self.object_matches_rules, objects))
 
     def object_matches_rules(self, obj):
-            """
-            Checks if the given object matches the rules.
+        """
+        Checks if the given object matches the rules.
 
-            Args:
-                obj: The object to be evaluated.
+        Args:
+            obj: The object to be evaluated.
 
-            Returns:
-                bool: True if the object matches the rules, False otherwise.
-            """
-            return RuleGroup(self.parsed_rule_set).evaluate(obj)
+        Returns:
+            bool: True if the object matches the rules, False otherwise.
+        """
+        return RuleGroup(self.parsed_rule_set).evaluate(obj)
