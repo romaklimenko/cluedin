@@ -57,8 +57,9 @@ class Rule:
             bool: The result of the evaluation.
         """
         return self.operator(
+            # left - value from object
             self.typecast_value(obj.get(self.field)),
-            self.get_value())
+            self.get_value())  # right - value from rule
 
     def get_value(self):
         """
@@ -88,20 +89,22 @@ class Rule:
             The typecasted value.
 
         """
-        # TODO: check the full list of types
         if value_to_cast is None:
             return None
 
-        if self.type == 'string':
-            return str(value_to_cast)
-        if self.type == 'integer':
-            return int(value_to_cast)
-        if self.type == 'double':
-            return float(value_to_cast)
-        if self.type == 'date' or self.type == 'datetime':
-            if isinstance(value_to_cast, str):
-                return datetime.strptime(value_to_cast, "%Y-%m-%dT%H:%M:%S.%fZ")
+        try:
+            if self.type == 'string':
+                return str(value_to_cast)
+            if self.type == 'integer':
+                return int(value_to_cast)
+            if self.type == 'double':
+                return float(value_to_cast)
+            if self.type == 'date' or self.type == 'datetime':
+                if isinstance(value_to_cast, str):
+                    return datetime.strptime(value_to_cast, "%Y-%m-%dT%H:%M:%S.%fZ")
+                return value_to_cast
+            if self.type == 'boolean' and isinstance(value_to_cast, str):
+                return value_to_cast.lower() in ['true', '1']
             return value_to_cast
-        if self.type == 'boolean' and isinstance(value_to_cast, str):
-            return value_to_cast.lower() in ['true', '1']
-        return value_to_cast
+        except ValueError:
+            return None
