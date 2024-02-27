@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 from .ctx import cluedin
 
 
@@ -21,6 +23,7 @@ class TestContext:
         assert context.protocol
         assert context.access_token is None
 
+    @pytest.mark.integration
     def test_get_token(self):
         # {
         #     "protocol": "http", # default - `https`

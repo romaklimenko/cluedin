@@ -1,13 +1,17 @@
 import os
 
+import pytest
+
+from cluedin import Context
+
 # pylint: disable=wrong-import-order
 from ..ctx import cluedin
-from cluedin import Context
 
 
 class TestRules:
     # pylint: disable=missing-docstring
 
+    @pytest.mark.integration
     def test_get_rules(self):
 
         # Arrange
@@ -26,6 +30,7 @@ class TestRules:
         assert rules['data']['management']['rules']['total'] == 2
         assert len(rules['data']['management']['rules']['data']) == 2
 
+    @pytest.mark.integration
     def test_get_rule(self):
 
         # Arrange
