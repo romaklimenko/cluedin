@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 # pylint: disable=wrong-import-order
 from .ctx import cluedin
 from cluedin import Context
@@ -8,6 +10,7 @@ from cluedin import Context
 class TestPublic:
     # pylint: disable=missing-docstring
 
+    @pytest.mark.integration
     def test_restore_user_entities(self):
 
         # Arrange

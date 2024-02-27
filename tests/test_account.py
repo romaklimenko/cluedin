@@ -1,9 +1,12 @@
 import os
 import random
 
+import pytest
+
+from cluedin import Context
+
 # pylint: disable=wrong-import-order
 from .ctx import cluedin
-from cluedin import Context
 
 
 class TestAccount:
@@ -11,6 +14,7 @@ class TestAccount:
 
     # Account
 
+    @pytest.mark.integration
     def test_get_users(self):
         # Arrange
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
@@ -33,6 +37,7 @@ class TestAccount:
 
     # Availability
 
+    @pytest.mark.integration
     def test_is_organization_available(self):
 
         # Arrange
@@ -47,6 +52,7 @@ class TestAccount:
 
         assert cluedin.account.is_organization_available(context, 'foobaz')
 
+    @pytest.mark.integration
     def test_is_user_available(self):
 
         # Arrange
@@ -62,6 +68,7 @@ class TestAccount:
         assert cluedin.account.is_user_available(
             context, 'admin@foobaz.com', context.org_name)
 
+    @pytest.mark.integration
     def test_get_invitation_code(self):
 
         # Arrange
@@ -78,6 +85,7 @@ class TestAccount:
 
         assert invitation_code == 'DE1703F42AA9E52B77F4D4EC2324581E'
 
+    @pytest.mark.integration
     def test_create_organization(self):
 
         # Arrange
@@ -106,6 +114,7 @@ class TestAccount:
         assert response['IsEmailDomainSignupActivated']
         assert response['Name'] == org_name
 
+    @pytest.mark.integration
     def test_create_user(self):
 
         # Arrange
@@ -126,6 +135,7 @@ class TestAccount:
 
         assert response.ok
 
+    @pytest.mark.integration
     def test_create_admin_user(self):
 
         # Arrange
@@ -146,6 +156,7 @@ class TestAccount:
 
         assert response.ok
 
+    @pytest.mark.integration
     def test_get_user(self):
 
         # Arrange
@@ -161,6 +172,7 @@ class TestAccount:
 
         assert response['client']['Email'] == context.user_email
 
+    @pytest.mark.integration
     def test_get_user_by_id(self):
 
         # Arrange

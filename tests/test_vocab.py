@@ -1,13 +1,17 @@
 import os
 
+import pytest
+
+from cluedin import Context
+
 # pylint: disable=wrong-import-order
 from .ctx import cluedin
-from cluedin import Context
 
 
 class TestVocab:
     # pylint: disable=missing-docstring
 
+    @pytest.mark.integration
     def test_get_vocab_keys(self):
 
         # Arrange

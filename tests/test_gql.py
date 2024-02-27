@@ -3,14 +3,16 @@ import os
 import pytest
 import requests
 
+from cluedin import Context
+
 # pylint: disable=wrong-import-order
 from .ctx import cluedin
-from cluedin import Context
 
 
 class TestGql:
     # pylint: disable=missing-docstring
 
+    @pytest.mark.integration
     def test_gql(self):
 
         # Arrange
@@ -51,6 +53,7 @@ class TestGql:
         assert 'cursor' in response['data']['search']
         assert 'entries' in response['data']['search']
 
+    @pytest.mark.integration
     def test_gql_error(self):
 
         # Arrange
@@ -94,6 +97,7 @@ class TestGql:
         assert str(exception.value).startswith(
             '400 Client Error: Bad Request for url:')
 
+    @pytest.mark.integration
     def test_org_gql(self):
 
         # Arrange
@@ -122,6 +126,7 @@ class TestGql:
         assert 'dataSource' in response['data']['notification']['serverStatus']
         assert 'prepare' in response['data']['notification']['serverStatus']
 
+    @pytest.mark.integration
     def test_entries(self):
 
         # Arrange
@@ -168,6 +173,7 @@ class TestGql:
 
         assert len(entries) > 0
 
+    @pytest.mark.integration
     def test_entries_flatten(self):
 
         # Arrange
@@ -214,6 +220,7 @@ class TestGql:
 
         assert len(entries) > 0
 
+    @pytest.mark.integration
     def test_actions(self):
 
         # Arrange
