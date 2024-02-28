@@ -13,7 +13,7 @@ def get_operator(operator_id):
     """
     rule_operator_by_id = {
         # 'Is Not True'
-        '7cd9d1e6-25d8-4fbf-977a-1d2c3832289d': lambda l, r: not is_true(l, r),
+        '7cd9d1e6-25d8-4fbf-977a-1d2c3832289d': lambda l, r, o: not is_true(l, r, o),
         # 'Is True'
         'bd804d86-f2bc-4bc1-9598-58cb6c490311': is_true,
         # 'Begins With'
@@ -27,7 +27,7 @@ def get_operator(operator_id):
         # 'Equals'
         '0bafc522-8011-43ba-978a-babe222ba466': equals,
         # 'Exists'
-        '306e5d29-832f-41e7-a6db-1c02eb5ebf74': lambda l, r: not is_null(l, r),
+        '306e5d29-832f-41e7-a6db-1c02eb5ebf74': lambda l, r, o: not is_null(l, r, o),
         # 'Greater'
         '85ecec6b-9c45-4365-9614-ef090137098d': greater,
         # 'Greater or Equal'
@@ -35,9 +35,9 @@ def get_operator(operator_id):
         # 'In'
         '31feed84-ce0e-435f-ba94-ce01b9c7bd15': in_list,
         # 'Is False'
-        'dfbfc760-69ea-4241-b33e-0425c2a51688': lambda l, r: not is_true(l, r),
+        'dfbfc760-69ea-4241-b33e-0425c2a51688': lambda l, r, o: not is_true(l, r, o),
         # 'Is Not Null'
-        'a42a9f87-7944-4d07-b1f3-d2f404bc4fd7': lambda l, r: not is_null(l, r),
+        'a42a9f87-7944-4d07-b1f3-d2f404bc4fd7': lambda l, r, o: not is_null(l, r, o),
         # 'Is Null'
         '9ad76320-021e-4211-9e9a-8b148c9c600d': is_null,
         # 'Is True'
@@ -49,21 +49,21 @@ def get_operator(operator_id):
         # 'Matches pattern'
         '4e4782d7-8c17-47c1-9797-37434fce0c77': matches_pattern,
         # 'Not Begins With'
-        'bbd02195-213e-40e2-9597-65ec05100dfc': lambda l, r: not begins_with(l, r),
+        'bbd02195-213e-40e2-9597-65ec05100dfc': lambda l, r, o: not begins_with(l, r, o),
         # 'Not Between'
-        '5642150e-fa0a-462c-a230-619d97cb3f8b': lambda l, r: not between(l, r),
+        '5642150e-fa0a-462c-a230-619d97cb3f8b': lambda l, r, o: not between(l, r, o),
         # 'Not Contains'
-        '4af53db0-acdb-44a6-89a1-40fa8ef05cde': lambda l, r: not contains(l, r),
+        '4af53db0-acdb-44a6-89a1-40fa8ef05cde': lambda l, r, o: not contains(l, r, o),
         # 'Not Ends With'
-        '3527ff72-bdd4-4bb4-b964-f18898d5a82d': lambda l, r: not ends_with(l, r),
+        '3527ff72-bdd4-4bb4-b964-f18898d5a82d': lambda l, r, o: not ends_with(l, r, o),
         # 'Not Equal'
-        '4f7f2b0f-155a-4208-b849-3e972f5d89d2': lambda l, r: not equals(l, r),
+        '4f7f2b0f-155a-4208-b849-3e972f5d89d2': lambda l, r, o: not equals(l, r, o),
         # 'Does Not Exist'
         '16b2dc07-94e3-4c29-bc60-a7a1d25de53b': is_null,
         # 'Not In'
-        '25c16d50-d170-4295-ad85-c2571431794a': lambda l, r: not in_list(l, r),
+        '25c16d50-d170-4295-ad85-c2571431794a': lambda l, r, o: not in_list(l, r, o),
         # 'Does not match pattern'
-        '9253eea0-5975-460a-8373-dd6ff57d4e65': lambda l, r: not matches_pattern(l, r)
+        '9253eea0-5975-460a-8373-dd6ff57d4e65': lambda l, r, o: not matches_pattern(l, r, o)
     }
 
     if operator_id in rule_operator_by_id:
@@ -72,13 +72,14 @@ def get_operator(operator_id):
     raise ValueError(f"Operator ID '{id}' not found.")
 
 
-def begins_with(left, right):
+def begins_with(left, right, _obj):
     """
     Evaluates if the left operand begins with the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand begins with the right operand, False otherwise.
@@ -88,27 +89,29 @@ def begins_with(left, right):
     return str(left).lower().startswith(str(right).lower())
 
 
-def not_begins_with(left, right):
+def not_begins_with(left, right, _obj):
     """
     Evaluates if the left operand does not begin with the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand does not begin with the right operand, False otherwise.
     """
-    return not begins_with(left, right)
+    return not begins_with(left, right, _obj)
 
 
-def contains(left, right):
+def contains(left, right, _obj):
     """
     Evaluates if the left operand contains the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand contains the right operand, False otherwise.
@@ -118,13 +121,14 @@ def contains(left, right):
     return str(right).lower() in str(left).lower()
 
 
-def ends_with(left, right):
+def ends_with(left, right, _obj):
     """
     Evaluates if the left operand ends with the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand ends with the right operand, False otherwise.
@@ -134,13 +138,14 @@ def ends_with(left, right):
     return str(left).lower().endswith(str(right).lower())
 
 
-def equals(left, right):
+def equals(left, right, _obj):
     """
     Evaluates if the left operand is equal to the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is equal to the right operand, False otherwise.
@@ -150,12 +155,14 @@ def equals(left, right):
     return str(left.lower()) == str(right.lower())
 
 
-def is_null(left, _):
+def is_null(left, _right, _obj):
     """
     Evaluates if the given value is null.
 
     Args:
         left: The value to be evaluated.
+        _right: Ignored parameter.
+        _obj: Ignored parameter.
 
     Returns:
         bool: True if the value is null, False otherwise.
@@ -163,27 +170,29 @@ def is_null(left, _):
     return left is None
 
 
-def is_true(left, _):
+def is_true(left, _right, _obj):
     """
-    Evaluates if the left operand is true.
+    Check if the left operand is true.
 
-    Parameters:
-    - left: The left operand to be evaluated.
-    - _: Ignored parameter.
+    Args:
+        left: The left operand.
+        _right: The right operand (not used in this function).
+        _obj: The object being evaluated (not used in this function).
 
     Returns:
-    - True if the left operand is true, False otherwise.
+        bool: True if the left operand is true, False otherwise.
     """
     return left
 
 
-def matches_pattern(left, right):
+def matches_pattern(left, right, _obj):
     """
     Evaluates if the left operand matches the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand matches the right operand, False otherwise.
@@ -193,13 +202,14 @@ def matches_pattern(left, right):
     return bool(re.match(right, left, re.IGNORECASE))
 
 
-def in_list(left, right):
+def in_list(left, right, _obj):
     """
     Evaluates if the left operand is in the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is in the right operand, False otherwise.
@@ -209,13 +219,14 @@ def in_list(left, right):
     return any(str(left).lower() == str(item).lower() for item in right)
 
 
-def greater(left, right):
+def greater(left, right, _obj):
     """
     Evaluates if the left operand is greater than the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is greater than the right operand, False otherwise.
@@ -225,13 +236,14 @@ def greater(left, right):
     return left > right
 
 
-def greater_or_equal(left, right):
+def greater_or_equal(left, right, _obj):
     """
     Evaluates if the left operand is greater than or equal to the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is greater than or equal to the right operand, False otherwise.
@@ -241,13 +253,14 @@ def greater_or_equal(left, right):
     return left >= right
 
 
-def less(left, right):
+def less(left, right, _obj):
     """
     Evaluates if the left operand is less than the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is less than the right operand, False otherwise.
@@ -257,13 +270,14 @@ def less(left, right):
     return left < right
 
 
-def less_or_equal(left, right):
+def less_or_equal(left, right, _obj):
     """
     Evaluates if the left operand is less than or equal to the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is less than or equal to the right operand, False otherwise.
@@ -273,13 +287,14 @@ def less_or_equal(left, right):
     return left <= right
 
 
-def between(left, right):
+def between(left, right, _obj):
     """
     Evaluates if the left operand is between the right operand.
 
     Args:
         left: The left operand.
         right: The right operand.
+        _obj: Ignored parameter. (input object)
 
     Returns:
         True if the left operand is between the right operand, False otherwise.
