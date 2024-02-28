@@ -1,8 +1,28 @@
 import json
+from typing import Any
 
-from .operators import get_operator as default_get_operator
+from .operators import default_get_operator
 from .rule import Rule
 from .rule_group import RuleGroup
+
+
+def default_get_value(field: str, obj: dict) -> Any:
+    """
+    Get the value of a field from a dictionary object.
+
+    Args:
+        field (str): The field name.
+        obj (dict): The dictionary object.
+
+    Returns:
+        Any: The value of the field in the dictionary object.
+    """
+    if field is None:
+        return None
+    if field == 'EntityType':
+        field = 'entityType'
+    field = field.replace('Properties[', '').replace(']', '')
+    return obj.get(field)
 
 
 class Evaluator:
@@ -10,9 +30,13 @@ class Evaluator:
     A class that evaluates rules against objects.
 
     Args:
-        rule_set (str or dict): The rule set to be evaluated. It can be either a JSON string or a dictionary.
-        get_operator (function, optional): A function that returns the operator based on the operator ID. 
+        rule_set (str or dict): The rule set to be evaluated.
+        It can be either a JSON string or a dictionary.
+        get_operator (function, optional):
+        A function that returns the operator based on the operator ID. 
             Defaults to default_get_operator.
+        map_property (function, optional):
+            A function that maps a field name to a property name.
 
     Attributes:
         get_operator (function): A function that returns the operator based on the operator ID.
@@ -26,8 +50,12 @@ class Evaluator:
         evaluate_rule_object(rule_object, obj): Evaluates a rule object against an object.
     """
 
-    def __init__(self, rule_set, get_operator=default_get_operator):
+    def __init__(self,
+                 rule_set,
+                 get_operator=default_get_operator,
+                 get_value=default_get_value):
         self.get_operator = get_operator
+        self.get_value = get_value
         if isinstance(rule_set, str):
             self.rule_group = RuleGroup(json.loads(rule_set))
         else:
@@ -90,7 +118,7 @@ class Evaluator:
         """
         return self.get_operator(rule.operator_id)(
             # left - value from the evaluated object
-            rule.typecast_value(obj.get(rule.field)),
+            rule.typecast_value(self.get_value(rule.field, obj)),
             # right - value from the rule
             rule.get_value(),
             obj)

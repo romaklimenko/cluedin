@@ -23,27 +23,10 @@ class Rule:
 
     def __init__(self, rule) -> None:
         self.id = rule['id']
-        self.field = self.normalize_field(rule['field'])
+        self.field = rule['field']
         self.operator_id = rule['operator']
         self.type = rule['type']
         self.value = rule['value']
-
-    def normalize_field(self, field):
-        """
-        Normalize a field by converting it to a standardized format.
-
-        Args:
-            field (str): The field to be normalized.
-
-        Returns:
-            str: The normalized field.
-
-        """
-        if field is None:
-            return None
-        if field == 'EntityType':
-            return 'entityType'
-        return field.replace('Properties[', '').replace(']', '')
 
     def get_value(self):
         """

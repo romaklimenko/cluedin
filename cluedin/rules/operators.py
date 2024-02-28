@@ -1,7 +1,7 @@
 import re
 
 
-def get_operator(operator_id):
+def default_get_operator(operator_id):
     """
     Retrieves the operator based on the provided operator ID.
 

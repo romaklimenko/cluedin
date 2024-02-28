@@ -1,5 +1,6 @@
 # pylint: disable=wrong-import-order
-from cluedin.rules.operators import get_operator
+from cluedin.rules.evaluator import default_get_value
+from cluedin.rules.operators import default_get_operator
 
 from ..ctx import cluedin
 
@@ -33,7 +34,7 @@ class TestEvaluator:
         def custom_get_operator(operator_id):
             if operator_id == 'compare_properties':
                 return lambda l, r, o: l == o.get(r) != None
-            return get_operator(operator_id)
+            return default_get_operator(operator_id)
 
         # Arrange
         rule = cluedin.json.load(
@@ -57,3 +58,28 @@ class TestEvaluator:
 
         assert evaluator.object_matches_rules(entity0) is True
         assert evaluator.object_matches_rules(entity1) is False
+
+    def test_custom_get_value(self):
+        # Arrange
+        rule = cluedin.json.load('tests/fixtures/rules/adult-movies.json')
+        entity = {
+            'name': 'The Godfather',
+            'entityType': '/IMDb/Title',
+            'imdb_title_isAdult': True,
+            'imdb_title_genres': ['Crime', 'Drama'],
+            'imdb_title_titleType': 'movie'
+        }
+
+        def custom_get_value(field, obj):
+            return default_get_value(field.replace('.', '_'), obj)
+
+        # Act
+        evaluator = cluedin.rules.Evaluator(
+            rule['data']['management']['rule']['condition'],
+            get_value=custom_get_value)
+
+        result = evaluator.object_matches_rules(entity)
+
+        # Assert
+
+        assert result is True
