@@ -36,7 +36,7 @@ class TestRules:
         # Arrange
         context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
         context.get_token()
-        rule_id = "e283807e-3da8-4183-9425-c91b39a611ae"  # Replace with an actual rule ID
+        rule_id = 'e283807e-3da8-4183-9425-c91b39a611ae'  # Replace with an actual rule ID
 
         # Act
         rule = cluedin.rules.get_rule(context, rule_id)
