@@ -1,5 +1,5 @@
 # pylint: disable=wrong-import-order
-from cluedin.rules.evaluator import default_get_value
+from cluedin.rules.evaluator import default_get_property_name
 from cluedin.rules.operators import default_get_operator
 
 from ..ctx import cluedin
@@ -59,7 +59,7 @@ class TestEvaluator:
         assert evaluator.object_matches_rules(entity0) is True
         assert evaluator.object_matches_rules(entity1) is False
 
-    def test_custom_get_value(self):
+    def test_custom_get_property_name(self):
         # Arrange
         rule = cluedin.json.load('tests/fixtures/rules/adult-movies.json')
         entity = {
@@ -70,8 +70,39 @@ class TestEvaluator:
             'imdb_title_titleType': 'movie'
         }
 
+        # Act
+        evaluator = cluedin.rules.Evaluator(
+            rule['data']['management']['rule']['condition'],
+            get_property_name=lambda x: default_get_property_name(x.replace('.', '_')))
+
+        result = evaluator.object_matches_rules(entity)
+
+        # Assert
+
+        assert result is True
+
+    def test_custom_get_value(self):
+        # Arrange
+        rule = cluedin.json.load('tests/fixtures/rules/adult-movies.json')
+        entity = {
+            'name': 'The Godfather',
+            'entityType': '/IMDb/Title',
+            'imdb': {
+                'title': {
+                    'isAdult': True,
+                    'genres': ['Crime', 'Drama'],
+                    'titleType': 'movie'
+                }
+            }
+        }
+
         def custom_get_value(field, obj):
-            return default_get_value(field.replace('.', '_'), obj)
+            parts = field.split('.')
+            for part in parts:
+                obj = obj.get(part)
+                if obj is None:
+                    return None
+            return obj
 
         # Act
         evaluator = cluedin.rules.Evaluator(
@@ -83,3 +114,19 @@ class TestEvaluator:
         # Assert
 
         assert result is True
+
+    def test_explain(self):
+        # Arrange
+        rule = cluedin.json.load('tests/fixtures/rules/adult-movies.json')
+
+        # Act
+        evaluator = cluedin.rules.Evaluator(
+            rule['data']['management']['rule']['condition'])
+
+        result = evaluator.explain()
+
+        # Assert
+
+        # pylint: disable=line-too-long
+        assert result == \
+            'df.query(\'`entityType` == "/IMDb/Title" & `imdb.title.titleType` == "movie" | `imdb.title.titleType` == "video" & `imdb.title.isAdult` == True\')'
