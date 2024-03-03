@@ -73,7 +73,7 @@ def get_rules(context: Context, scope=RuleScope.DATA_PART) -> dict:
     return org_gql(context, query, variables)
 
 
-def get_rule(context: Context, rule_id: str):
+def get_rule(context: Context, rule_id: str) -> dict:
     """
     Retrieves the properties of a rule based on the provided rule ID.
 
