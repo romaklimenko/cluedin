@@ -9,6 +9,7 @@ from .rule_group import RuleGroup
 def default_get_property_name(field: str) -> str:
     """
     Returns the property name for a given field.
+    Used to map CluedIn Rules fields to your fields.
 
     Args:
         field (str): The field name.
@@ -77,7 +78,7 @@ class Evaluator:
         else:
             self.rule_group = RuleGroup(rule_set)
 
-    def get_matching_objects(self, objects):
+    def get_matching_objects(self, objects) -> list:
         """
         Returns a list of objects that match the rules.
 
@@ -89,7 +90,7 @@ class Evaluator:
         """
         return list(filter(self.object_matches_rules, objects))
 
-    def object_matches_rules(self, obj):
+    def object_matches_rules(self, obj) -> bool:
         """
         Checks if the given object matches the rules defined in the rule group.
 
@@ -204,7 +205,7 @@ class Evaluator:
             return ' | '.join(map(self.__explain_rule_object, rule_group.rules))
         raise ValueError(f"Invalid condition: {rule_group.condition}")
 
-    def explain(self):
+    def explain(self) -> str:
         """
         Generates a pandas query string based on the rules.
         """

@@ -167,6 +167,56 @@ entities = cluedin.gql.entries(context, query, variables):
 - `cluedin.public.post_clue(context: Context, clue: str, content_type: str = 'application/xml') -> str` – posts a clue in XML or JSON format. This method returns an operation result as a string.
 - `cluedin.public.restore_user_entities(context: Context) -> list` – if you accidentally deleted `/Infrastructure/User` entities, this method gets all users and restores entities for those who miss them.
 
+### Rules
+
+- `cluedin.rules.RuleScope` - an enumeration of rule scopes: `DATA_PART`, `ENTITY`, `SURVIVORSHIP`.
+- `cluedin.rules.get_rules(context: Context, scope=RuleScope.DATA_PART) -> dict` – returns all rules for a given scope. This method returns a JSON-response serialized into a `dict`.
+- `cluedin.rules.get_rule(context: Context, rule_id: str) -> dict` – returns a rule by ID. This method returns a JSON-response serialized into a `dict`.
+
+#### Evaluator
+
+- `cluedin.rules.evaluator.default_get_property_name(field: str) -> str` – returns a default property name for a given field. Used to map CluedIn Rules fields to your fields.
+- `cluedin.rules.evaluator.default_get_value(field: str, obj: dict) -> Any` – returns a default value for a given field. Used to map CluedIn Rules fields to your fields.
+- `cluedin.rules.Evaluator` – a class to evaluate CluedIn Rules.
+- `cluedin.rules.Evaluator.evaluate(context: Context, rule: dict, obj: dict) -> bool` – evaluates a rule for an object. Returns a Boolean:
+
+  - `get_matching_objects(self, objects) -> list` – returns a list of objects that match the rule.
+  - `object_matches_rules(self, obj) -> bool` – returns `True` if an object matches the rule.
+  - `explain(self) -> str` – returns an explanation of the rule (in pandas `DataFrame.query` terms).
+
+#### Operators
+
+- `cluedin.rules.operators.default_get_operator(operator_id) -> Any` – returns a default operator for a given operator ID. Used to map CluedIn Rules operators to your operators.
+
+You can add custom operatiors (see `test_operators.py` for examples), but the following CluedIn Rules operators are supported out of the box:
+
+- `Is Not True`
+- `Is True`
+- `Begins With`
+- `Between`
+- `Contains`
+- `Ends With`
+- `Equals`
+- `Exists`
+- `Greater`
+- `Greater or Equal`
+- `In`
+- `Is False`
+- `Is Not Null`
+- `Is Null`
+- `Is True`
+- `Less`
+- `Less or Equal`
+- `Matches pattern`
+- `Not Begins With`
+- `Not Between`
+- `Not Contains`
+- `Not Ends With`
+- `Not Equal`
+- `Does Not Exist`
+- `Not In`
+- `Does not match pattern`
+
 ### Vocabulary
 
 - `cluedin.vocab.get_vocab_keys(context: Context) -> list` – gets all vocabulary keys.
