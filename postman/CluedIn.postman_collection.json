@@ -88,6 +88,44 @@
 								"description": "Requests a new JWT access token."
 							},
 							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "refresh_token",
+											"type": "text"
+										},
+										{
+											"key": "refresh_token",
+											"value": "{{refresh_token}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{org_name}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{auth_url}}/connect/token",
+									"host": [
+										"{{auth_url}}"
+									],
+									"path": [
+										"connect",
+										"token"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -648,6 +686,46 @@
 									"raw": "{{api_url}}/graphql",
 									"host": [
 										"{{api_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Data Set",
+					"item": [
+						{
+							"name": "Get Data Set Content",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getDataSetContent($dataSetId: ID!, $page: Int, $pageSize: Int, $terms: String) {\r\n  inbound {\r\n    dataSetContent(id: $dataSetId, page: $page, pageSize: $pageSize, terms: $terms)\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"dataSetId\": \"{{dataset_id}}\",\r\n  \"page\": 0,\r\n  \"pageSize\": 10\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org_url}}/graphql",
+									"host": [
+										"{{org_url}}"
 									],
 									"path": [
 										"graphql"
@@ -1259,6 +1337,54 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "query getRules(\r\n\t$searchName: String\r\n\t$isActive: Boolean\r\n\t$pageNumber: Int\r\n\t$sortBy: String\r\n\t$sortDirection: String\r\n) {\r\n\tmanagement {\r\n\t\tid\r\n\t\trules(\r\n\t\t\tsearchName: $searchName\r\n\t\t\tisActive: $isActive\r\n\t\t\tpageNumber: $pageNumber\r\n\t\t\tsortBy: $sortBy\r\n\t\t\tsortDirection: $sortDirection\r\n\t\t) {\r\n\t\t\ttotal\r\n\t\t\tdata {\r\n\t\t\t\tid\r\n\t\t\t\tname\r\n\t\t\t\torder\r\n\t\t\t\tdescription\r\n\t\t\t\tisActive\r\n\t\t\t\tcreatedBy\r\n\t\t\t\tmodifiedBy\r\n\t\t\t\townedBy\r\n\t\t\t\tcreatedAt\r\n\t\t\t\tmodifiedAt\r\n\t\t\t\tauthor {\r\n\t\t\t\t\tid\r\n\t\t\t\t\tusername\r\n\t\t\t\t\t__typename\r\n\t\t\t\t}\r\n\t\t\t\t__typename\r\n\t\t\t}\r\n\t\t\t__typename\r\n\t\t}\r\n\t\t__typename\r\n\t}\r\n}\r\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{org_url}}/graphql",
+									"host": [
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a Rule",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getRule($id: ID!) {\r\n  management {\r\n    id\r\n    rule(id: $id) {\r\n      id\r\n      name\r\n      description\r\n      isActive\r\n      createdBy\r\n      modifiedBy\r\n      ownedBy\r\n      createdAt\r\n      modifiedAt\r\n      condition\r\n      actions\r\n      rules\r\n      sourceDetail {\r\n        id\r\n        name\r\n        type\r\n        __typename\r\n      }\r\n      author {\r\n        id\r\n        username\r\n        __typename\r\n      }\r\n      scope\r\n      isReprocessing\r\n      requiresAttention\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\n  \"id\": \"{{rule_id}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org_url}}/graphql",
+									"host": [
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Rule Operators",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getRuleOperators {\r\n  management {\r\n    id\r\n    ruleOperators\r\n    __typename\r\n  }\r\n}",
 										"variables": ""
 									}
 								},
