@@ -733,6 +733,42 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Data Source by Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getDataSourceById($id: ID!) {\r\n  inbound {\r\n    id\r\n    dataSource(id: $id) {\r\n      id\r\n      canBeDeleted\r\n      name\r\n      hasError\r\n      latestErrorMessage\r\n      errorType\r\n      stopped\r\n      logoType\r\n      crashedDuringUpload\r\n      author {\r\n        id\r\n        username\r\n        __typename\r\n      }\r\n      fileMetadata {\r\n        fileName\r\n        processing\r\n        uploading\r\n        uploadedPercentage\r\n        mimeType\r\n        __typename\r\n      }\r\n      createdAt\r\n      type\r\n      dataSourceSet {\r\n        id\r\n        name\r\n        __typename\r\n      }\r\n      sql\r\n      connectionStatus {\r\n        connected\r\n        errorMessage\r\n        __typename\r\n      }\r\n      dataSets {\r\n        id\r\n        name\r\n        isBridge\r\n        isArchive\r\n        archivedBy\r\n        archivedByUser {\r\n          id\r\n          username\r\n          __typename\r\n        }\r\n        configuration\r\n        annotationId\r\n        elasticTotal\r\n        expectedTotal\r\n        currentLoadedSize\r\n        failedLoadingTotal\r\n        hasFailureInLoading\r\n        hasValidationParsingError\r\n        hasValidationMappingError\r\n        hasValidationProcessingError\r\n        fileSize\r\n        hasError\r\n        fieldMappings {\r\n          originalField\r\n          key\r\n          columnType\r\n          columnSubType\r\n          __typename\r\n        }\r\n        annotation {\r\n          id\r\n          originEntityCodeKey\r\n          annotationProperties {\r\n            key\r\n            __typename\r\n          }\r\n          __typename\r\n        }\r\n        stats {\r\n          total\r\n          successful\r\n          failed\r\n          __typename\r\n        }\r\n        author {\r\n          id\r\n          username\r\n          __typename\r\n        }\r\n        createdAt\r\n        updatedAt\r\n        dataSource {\r\n          id\r\n          type\r\n          stopped\r\n          crashedDuringUpload\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      connectorConfigurationId\r\n      connectorConfiguration {\r\n        id\r\n        name\r\n        accountDisplay\r\n        accountId\r\n        active\r\n        autoSync\r\n        codeName\r\n        configuration\r\n        connector {\r\n          id\r\n          icon\r\n          name\r\n          authMethods\r\n          properties\r\n          streamModes\r\n          __typename\r\n        }\r\n        createdDate\r\n        entityId\r\n        failingAuthentication\r\n        guide\r\n        helperConfiguration\r\n        providerId\r\n        reAuthEndpoint\r\n        source\r\n        sourceQuality\r\n        stats\r\n        status\r\n        supportsAutomaticWebhookCreation\r\n        supportsConfiguration\r\n        supportsWebhooks\r\n        userId\r\n        userName\r\n        users {\r\n          id\r\n          username\r\n          roles\r\n          __typename\r\n        }\r\n        webhookManagementEndpoints\r\n        webhooks\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"id\": \"{{datasource_id}}\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{org_url}}/graphql",
+									"host": [
+										"{{org_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -874,6 +910,41 @@
 					"item": [
 						{
 							"name": "Search Entities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {\r\n  search(query: $query, sort: FIELDS, cursor: $cursor, pageSize: $pageSize, sortFields: {field: \"id\", direction: ASCENDING}) {\r\n    totalResults\r\n    cursor\r\n    entries {\r\n      id\r\n      name\r\n      entityType\r\n      properties\r\n    }\r\n  }\r\n}\r\n",
+										"variables": "{\n  \"query\": \"entityType:{{entity_type}}\",\n  \"pageSize\": 10000\n}"
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/graphql",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Vocabulary Key",
 							"event": [
 								{
 									"listen": "test",
@@ -1921,6 +1992,35 @@
 					]
 				},
 				{
+					"name": "Entity Data Deletion",
+					"item": [
+						{
+							"name": "Delete By Provider Definition Id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/entityDataDeletion/deleteByProviderDefinitionId?providerDefinitionId={{provider_definition_id}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"entityDataDeletion",
+										"deleteByProviderDefinitionId"
+									],
+									"query": [
+										{
+											"key": "providerDefinitionId",
+											"value": "{{provider_definition_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Organization",
 					"item": [
 						{
@@ -2652,12 +2752,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{libpostal_url}}/parser",
+									"raw": "{{libpostal_url}}/expand",
 									"host": [
 										"{{libpostal_url}}"
 									],
 									"path": [
-										"parser"
+										"expand"
 									]
 								}
 							},
