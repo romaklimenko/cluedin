@@ -27,8 +27,8 @@ class TestRules:
         assert 'management' in rules['data']
         assert 'rules' in rules['data']['management']
         assert 'total' in rules['data']['management']['rules']
-        assert rules['data']['management']['rules']['total'] == 2
-        assert len(rules['data']['management']['rules']['data']) == 2
+        assert rules['data']['management']['rules']['total'] == 100
+        assert len(rules['data']['management']['rules']['data']) == 20
 
     @pytest.mark.integration
     def test_get_rule(self):

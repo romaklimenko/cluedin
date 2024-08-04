@@ -14,13 +14,14 @@ class RuleScope(Enum):
     SURVIVORSHIP = 'Survivorship'
 
 
-def get_rules(context: Context, scope=RuleScope.DATA_PART) -> dict:
+def get_rules(context: Context, scope=RuleScope.DATA_PART, page_number=1) -> dict:
     """
     Retrieves rules based on the specified parameters.
 
     Args:
             context (Context): The context object.
             scope (RuleScope, optional): The scope of the rules. Defaults to RuleScope.DATA_PART.
+            page_number (int, optional): The page number to retrieve. Defaults to 1.
 
     Returns:
             dict: The rules data.
@@ -67,7 +68,8 @@ def get_rules(context: Context, scope=RuleScope.DATA_PART) -> dict:
         """
 
     variables = {
-        "scope": scope.value
+        "scope": scope.value,
+        "pageNumber": page_number
     }
 
     return org_gql(context, query, variables)
