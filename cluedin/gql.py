@@ -83,7 +83,7 @@ def org_gql(context: Context, query: str, variables: dict = None) -> dict:
 
 
 def entries(context: Context, query: str, variables: dict = None, flat=False) \
-    -> Generator[Any, Any, Any]:
+        -> Generator[Any, Any, Any]:
     """Get entries from a GraphQL query. This function is a generator.
         It uses the cursor to get the next page of entries.
 
@@ -138,3 +138,51 @@ def entries(context: Context, query: str, variables: dict = None, flat=False) \
         variables['cursor'] = cursor
 
         response = gql(context, query, variables)
+
+
+def search(context: Context, search_query: str, page_size: int = 10_000) -> Generator[Any, Any, Any]:
+    """
+    Search for entities in CluedIn.
+
+    Args:
+        context (Context): Context object.
+        search_query (str): Search query.
+        page_size (int, optional): Page size. Defaults to 10_000.
+
+    Returns:
+        Generator[Any, Any, Any]: Iterator of entities.
+    """
+    query = """
+query searchEntities($cursor: PagingCursor, $query: String, $pageSize: Int) {
+  search(
+    query: $query
+    cursor: $cursor
+    pageSize: $pageSize
+    sort: FIELDS
+    sortFields: {field: "id", direction: ASCENDING}
+  ) {
+    totalResults
+    cursor
+    entries {
+      id
+      name
+      displayName
+      description
+      discoveryDate
+      createdDate
+      modifiedDate
+      lastProcessedDate
+      entityType
+      originEntityCode
+      codes
+      tags
+      properties
+    }
+  }
+}
+    """
+
+    variables = {'query': search_query, 'pageSize': page_size}
+
+    for entity in entries(context, query, variables=variables, flat=True):
+        yield entity

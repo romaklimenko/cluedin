@@ -151,7 +151,8 @@ entities = cluedin.gql.entries(context, query, variables):
 
 - `cluedin.gql.gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request and returns a response.
 - `cluedin.gql.org_gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request to Organization endpoint and returns a response.
-- `cluedin.gql.entries(context: Context, query: str, variables: dict = None, flat=False) -> list` – returns entries from a GraphQL search query. If cursor is requested in the GraphQL query (see the example above and tests), then it proceeds to next pages to return all results. If `flat` is `True`, then it flattens the `properties` dictionary of each returned entity.
+- `cluedin.gql.entries(context: Context, query: str, variables: dict = None, flat=False) -> Generator` – returns entries from a GraphQL search query. If cursor is requested in the GraphQL query (see the example above and tests), then it proceeds to next pages to return all results. If `flat` is `True`, then it flattens the `properties` dictionary of each returned entity.
+- `def search(context: Context, search_query: str, page_size: int = 10_000) -> Generator` – returns entities by a search query. This method is a wrapper around `cluedin.gql.entries`.
 
 ### JSON
 

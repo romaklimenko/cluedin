@@ -267,3 +267,26 @@ class TestGql:
             assert 'entityType' in entry
 
         assert len(entries) > 0
+
+    @pytest.mark.integration
+    def test_search(self):
+
+        # Arrange
+
+        context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context.get_token()
+
+        entries = []
+
+        # Act and Assert
+
+        for entry in cluedin.gql.search(context, "+entityType:/Person"):
+            entries.append(entry)
+            assert 'id' in entry
+            assert 'name' in entry
+            assert 'originEntityCode' in entry
+            assert 'codes' in entry
+            assert 'entityType' in entry
+            assert 'properties' not in entry
+
+        assert len(entries) == 50_000
