@@ -12,7 +12,7 @@ def gql(context: Context, query: str, variables: dict = None) -> dict:
     Args:
         context (Context): Context object.
         query (str): GraphQL query.
-        variables (dict, optional): A dicrionary of variables to be used in the query.
+        variables (dict, optional): A dictionary of variables to be used in the query.
             Defaults to {}.
 
     Returns:
@@ -50,7 +50,7 @@ def org_gql(context: Context, query: str, variables: dict = None) -> dict:
     Args:
         context (Context): Context object.
         query (str): GraphQL query.
-        variables (dict, optional): A dicrionary of variables to be used in the query.
+        variables (dict, optional): A dictionary of variables to be used in the query.
             Defaults to {}.
 
     Returns:
@@ -90,7 +90,8 @@ def entries(context: Context, query: str, variables: dict = None, flat=False) \
     Args:
         context (Context): Context object.
         query (str): GraphQL query.
-        variables (dict, optional): A dicrionary of variables to be used in the query.
+        variables (dict, optional): A dictionary of variables to be used in the query.
+        flat (bool, optional): Flatten the properties. Defaults to False.
 
     Returns:
         Generator[Any, Any, Any]: Iterator of entries.

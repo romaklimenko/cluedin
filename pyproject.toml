@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "cluedin"
-version = "2.5.0"
+version = "2.6.0"
 description = "A Python client for CluedIn API."
-authors = ["Roman Klimenko <romaklimenko@gmail.com>"]
+authors = ["Roman Klimenko <roman@klimenko.dk>"]
 readme = "cluedin/README.md"
 license = "MIT"
 keywords = ["cluedin", "mdm", "master data management"]
-maintainers = ["Roman Klimenko <romaklimenko@gmail.com>"]
+maintainers = ["Roman Klimenko <roman@klimenko.dk>"]
 homepage = "https://github.com/romaklimenko/cluedin"
 repository = "https://github.com/romaklimenko/cluedin"
 

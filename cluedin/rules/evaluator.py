@@ -1,12 +1,12 @@
 import json
-from typing import Any
+from typing import Any, Optional
 
 from .operators import default_get_operator, pandas_get_operator
 from .rule import Rule
 from .rule_group import RuleGroup
 
 
-def default_get_property_name(field: str) -> str:
+def default_get_property_name(field: Optional[str]) -> Optional[str]:
     """
     Returns the property name for a given field.
     Used to map CluedIn Rules fields to your fields.
@@ -20,9 +20,9 @@ def default_get_property_name(field: str) -> str:
     """
     if field is None:
         return None
-    if field == 'EntityType':
-        field = 'entityType'
-    return field.replace('Properties[', '').replace(']', '')
+    if field == "EntityType":
+        field = "entityType"
+    return field.replace("Properties[", "").replace("]", "")
 
 
 def default_get_value(field: str, obj: dict) -> Any:
@@ -65,11 +65,14 @@ class Evaluator:
     Raises:
         ValueError: If the condition of the rule group is invalid.
     """
-    def __init__(self,
-                 rule_set,
-                 get_operator=default_get_operator,
-                 get_property_name=default_get_property_name,
-                 get_value=default_get_value):
+
+    def __init__(
+        self,
+        rule_set,
+        get_operator=default_get_operator,
+        get_property_name=default_get_property_name,
+        get_value=default_get_value,
+    ):
         self.get_operator = get_operator
         self.get_property_name = get_property_name
         self.get_value = get_value
@@ -116,13 +119,19 @@ class Evaluator:
         Raises:
             ValueError: If the condition of the rule group is invalid.
         """
-        if rule_group.condition == 'AND':
-            return all(map(lambda x: self.__evaluate_rule_object(x, obj), rule_group.rules))
-        if rule_group.condition == 'OR':
-            return any(map(lambda x: self.__evaluate_rule_object(x, obj), rule_group.rules))
+        if rule_group.condition == "AND":
+            return all(
+                map(lambda x: self.__evaluate_rule_object(
+                    x, obj), rule_group.rules)
+            )
+        if rule_group.condition == "OR":
+            return any(
+                map(lambda x: self.__evaluate_rule_object(
+                    x, obj), rule_group.rules)
+            )
         raise ValueError(f"Invalid condition: {rule_group.condition}")
 
-    def __evaluate_rule(self, rule: dict, obj: dict) -> bool:
+    def __evaluate_rule(self, rule: Rule, obj: dict) -> bool:
         """
         Evaluates a rule against an object.
 
@@ -136,12 +145,12 @@ class Evaluator:
         return self.get_operator(rule.operator_id)(
             # left - value from the evaluated object
             rule.typecast_value(
-                self.get_value(
-                    self.get_property_name(rule.field),
-                    obj)),
+                self.get_value(self.get_property_name(rule.field), obj)
+            ),
             # right - value from the rule
             rule.get_value(),
-            obj)
+            obj,
+        )
 
     def __evaluate_rule_object(self, rule_object: dict, obj) -> bool:
         """
@@ -154,7 +163,7 @@ class Evaluator:
         Returns:
             The result of the evaluation.
         """
-        if 'rules' in rule_object and len(rule_object['rules']) > 0:
+        if "rules" in rule_object and len(rule_object["rules"]) > 0:
             return self.__evaluate_rule_group(RuleGroup(rule_object), obj)
         return self.__evaluate_rule(Rule(rule_object), obj)
 
@@ -168,7 +177,7 @@ class Evaluator:
         Returns:
             str: The pandas query string.
         """
-        if 'rules' in rule_object and len(rule_object['rules']) > 0:
+        if "rules" in rule_object and len(rule_object["rules"]) > 0:
             return self.__explain_rule_group(RuleGroup(rule_object))
         return self.__explain_rule(Rule(rule_object))
 
@@ -183,11 +192,18 @@ class Evaluator:
             str: The pandas query string.
         """
         # return f"{rule.field} {rule.operator_id} {rule.get_value()}"
-        if rule.type in ['string', 'datetime', 'date']:
+        if rule.type in ["string", "datetime", "date"]:
             return pandas_get_operator(
-                f'`{self.get_property_name(rule.field)}`', rule.operator_id, f'"{rule.get_value()}"')  # pylint: disable=line-too-long
+                # pylint: disable=line-too-long
+                f"`{self.get_property_name(rule.field)}`",
+                rule.operator_id,
+                f'"{rule.get_value()}"',
+            )
         return pandas_get_operator(
-            f'`{self.get_property_name(rule.field)}`', rule.operator_id, rule.get_value())
+            f"`{self.get_property_name(rule.field)}`",
+            rule.operator_id,
+            rule.get_value(),
+        )
 
     def __explain_rule_group(self, rule_group):
         """
@@ -199,10 +215,10 @@ class Evaluator:
         Returns:
             str: The pandas query string.
         """
-        if rule_group.condition == 'AND':
-            return ' & '.join(map(self.__explain_rule_object, rule_group.rules))
-        if rule_group.condition == 'OR':
-            return ' | '.join(map(self.__explain_rule_object, rule_group.rules))
+        if rule_group.condition == "AND":
+            return " & ".join(map(self.__explain_rule_object, rule_group.rules))
+        if rule_group.condition == "OR":
+            return " | ".join(map(self.__explain_rule_object, rule_group.rules))
         raise ValueError(f"Invalid condition: {rule_group.condition}")
 
     def explain(self) -> str:

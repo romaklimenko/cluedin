@@ -33,7 +33,7 @@ class TestEvaluator:
 
         def custom_get_operator(operator_id):
             if operator_id == 'compare_properties':
-                return lambda l, r, o: l == o.get(r) != None
+                return lambda l, r, o: l == o.get(r)
             return default_get_operator(operator_id)
 
         # Arrange

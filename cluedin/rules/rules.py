@@ -24,7 +24,7 @@ def get_rules(context: Context, scope=RuleScope.DATA_PART, page_number=1) -> dic
             page_number (int, optional): The page number to retrieve. Defaults to 1.
 
     Returns:
-            dict: The rules data.
+            dict: The rules' data.
 
     """
     query = """

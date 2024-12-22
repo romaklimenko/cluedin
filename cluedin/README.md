@@ -18,7 +18,7 @@ Create a JSON file with context configuration to your CluedIn instance:
 
 In this file, parameters have the following meaning:
 
-- `protocol` - `http` if your CluedIn instance is not secured with a TLS certicate. Otherwise, `https` by default.
+- `protocol` - `http` if your CluedIn instance is not secured with a TLS certificate. Otherwise, `https` by default.
 - `domain` – CluedIn instance domain without the Organization prefix.
 - `org_name` – the name of Organization (a.k.a. Organization prefix).
 - `user_email` – the user's email.
@@ -126,8 +126,9 @@ entities = cluedin.gql.entries(context, query, variables):
 
 ### Context
 
-- `Context.from_dict(cls, context_dict: dict) -> Context` – creates a new `Context` object from a `dict`.
-- `Context.from_json_file(file_path: str) -> Context` – creates a new `Context` object from a JSON-file.
+- `cluedin.Context.from_dict(cls, context_dict: dict) -> Context` – creates a new `Context` object from a `dict`.
+- `cluedin.Context.from_json_file(file_path: str) -> Context` – creates a new `Context` object from a JSON-file.
+- `cluedin.Context.from_jwt(jwt: str) -> Context` – creates a new `Context` object from a JWT (JSON Web Token, a.k.a. access token or API token).
 
 ### Account
 
@@ -152,12 +153,12 @@ entities = cluedin.gql.entries(context, query, variables):
 - `cluedin.gql.gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request and returns a response.
 - `cluedin.gql.org_gql(context: Context, query: str, variables: dict = None) -> dict` – sends a GraphQL request to Organization endpoint and returns a response.
 - `cluedin.gql.entries(context: Context, query: str, variables: dict = None, flat=False) -> Generator` – returns entries from a GraphQL search query. If cursor is requested in the GraphQL query (see the example above and tests), then it proceeds to next pages to return all results. If `flat` is `True`, then it flattens the `properties` dictionary of each returned entity.
-- `def search(context: Context, search_query: str, page_size: int = 10_000) -> Generator` – returns entities by a search query. This method is a wrapper around `cluedin.gql.entries`.
+- `search(context: Context, search_query: str, page_size: int = 10_000) -> Generator` – returns entities by a search query. This method is a wrapper around `cluedin.gql.entries`.
 
 ### JSON
 
-- `dump(file: str, obj: Any) -> None` – serialize obj as a JSON formatted stream to file.
-- `load(file: str) -> Any` – deserialize file to a Python object.
+- `cluedin.json.dump(file: str, obj: Any) -> None` – serialize obj as a JSON formatted stream to file.
+- `cluedin.json.load(file: str) -> Any` – deserialize file to a Python object.
 
 ### JWT
 
@@ -181,15 +182,15 @@ entities = cluedin.gql.entries(context, query, variables):
 - `cluedin.rules.Evaluator` – a class to evaluate CluedIn Rules.
 - `cluedin.rules.Evaluator.evaluate(context: Context, rule: dict, obj: dict) -> bool` – evaluates a rule for an object. Returns a Boolean:
 
-  - `get_matching_objects(self, objects) -> list` – returns a list of objects that match the rule.
-  - `object_matches_rules(self, obj) -> bool` – returns `True` if an object matches the rule.
-  - `explain(self) -> str` – returns an explanation of the rule (in pandas `DataFrame.query` terms).
+  - `cluedin.rules.get_matching_objects(self, objects) -> list` – returns a list of objects that match the rule.
+  - `cluedin.rules.object_matches_rules(self, obj) -> bool` – returns `True` if an object matches the rule.
+  - `cluedin.rules.explain(self) -> str` – returns an explanation of the rule (in pandas `DataFrame.query` terms).
 
 #### Operators
 
 - `cluedin.rules.operators.default_get_operator(operator_id) -> Any` – returns a default operator for a given operator ID. Used to map CluedIn Rules operators to your operators.
 
-You can add custom operatiors (see `test_operators.py` for examples), but the following CluedIn Rules operators are supported out of the box:
+You can add custom operations (see `test_operators.py` for examples), but the following CluedIn Rules operators are supported out of the box:
 
 - `Is Not True`
 - `Is True`
