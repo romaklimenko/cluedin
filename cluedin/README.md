@@ -4,6 +4,8 @@
 
 ## Installation
 
+CluedIn Python SDK supports Python from version 3.7 and above.
+
 From [PyPi](https://pypi.org/project/cluedin/):
 
 ```shell
