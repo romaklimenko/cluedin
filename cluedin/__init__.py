@@ -7,6 +7,7 @@ from . import context
 from . import entity
 from . import env
 from . import gql
+from . import ingestion
 from . import json
 from . import jwt
 from . import public

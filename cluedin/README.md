@@ -29,22 +29,21 @@ Here is an example of a file for a CluedIn instance running locally from a [Home
 
 ```json
 {
-  "protocol": "http",
-  "domain": "127.0.0.1.nip.io",
+  "domain": "mdm.saas-cluedin.com",
   "org_name": "foobar",
   "user_email": "admin@foobar.com",
   "user_password": "Foobar23!"
 }
 ```
 
-We add the protocol, but we can skip this parameter if the URL starts with `https`. Likewise, we can skip `verify_tls` because it only makes sense for HTTPs URLs.
+We add the `protocol`, but we can skip this parameter if the URL starts with `https`.
+If you use self-signed certificates, you can add `verify_tls: false` to avoid certificate verification.
 
 Alternatively, to provide email and password, you can obtain an API access token from CluedIn UI and provide it in the file:
 
 ```json
 {
-  "protocol": "http",
-  "domain": "127.0.0.1.nip.io",
+  "domain": "mdm.saas-cluedin.com",
   "org_name": "foobar",
   "access_token": "..."
 }
@@ -62,15 +61,14 @@ Now, you can load this file from your Python code and get an access token (if no
 import cluedin
 
 context = Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
-context.get_token()
+context.get_token() # call it only if access_token is not provided in the context file
 ```
 
 You could also do it without the context file:
 
 ```python
 context = {
-    "protocol": "http",
-    "domain": "127.0.0.1.nip.io",
+    "domain": "mdm.saas-cluedin.com",
     "org_name": "foobar",
     "user_email": "admin@foobar.com",
     "user_password": "Foobar23!"
@@ -78,6 +76,12 @@ context = {
 
 context = Context.from_dict(context)
 context.get_token()
+```
+
+Or, you can infer the context from the JWT token:
+
+```python
+context = Context.from_jwt(API_TOKEN)
 ```
 
 ### GraphQL
@@ -147,6 +151,10 @@ entities = cluedin.gql.entries(context, query, variables):
 
 - `cluedin.entity.get_entity_blob(context: Context, entity_id: str) -> str` – returns an entity blob by ID.
 - `cluedin.entity.get_entity_as_clue(context: Context, entity_id: str) -> str` – returns an entity as a clue by ID.
+
+### Ingestion
+
+- `cluedin.ingestion.post(context: Context, url: str, collection: list[Any], batch_size: int = 10_000, delay_in_seconds: int = 0) -> Generator` – posts data to CluedIn ingestion endpoint. This method splits the collection into batches and sends them to CluedIn. If `delay_in_seconds` is set, then it waits for this time before sending the next batch. Returns a generator of responses.
 
 ### GraphQL
 
