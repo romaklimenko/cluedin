@@ -12,15 +12,15 @@ class TestContext:
 
         # Act
 
-        context = cluedin.Context.from_json_file(os.environ['CLUEDIN_CONTEXT'])
+        context = cluedin.Context.from_json_file("tests/fixtures/context.json")
 
         # Assert
 
-        assert context.domain
-        assert context.org_name
-        assert context.user_email
-        assert context.user_password
-        assert context.protocol
+        assert context.domain == "cluedin.local:8888"
+        assert context.org_name == "foobar"
+        assert context.user_email == "admin@foobar.com"
+        assert context.user_password == "Foobar23!"
+        assert context.protocol == "http"
         assert context.access_token is None
 
     @pytest.mark.integration

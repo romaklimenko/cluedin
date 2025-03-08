@@ -1,0 +1,7 @@
+{
+  "protocol": "http",
+  "domain": "cluedin.local:8888",
+  "org_name": "foobar",
+  "user_email": "admin@foobar.com",
+  "user_password": "Foobar23!"
+}
