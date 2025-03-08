@@ -30,8 +30,7 @@ def get_entity_blob(context: Context, entity_id: str) -> str:
         timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.text
 
@@ -62,7 +61,6 @@ def get_entity_as_clue(context: Context, entity_id: str) -> str:
         timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.text

@@ -38,8 +38,7 @@ def gql(context: Context, query: str, variables: dict = None) -> dict:
         verify=context.verify_tls
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 
@@ -76,8 +75,7 @@ def org_gql(context: Context, query: str, variables: dict = None) -> dict:
         verify=context.verify_tls
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 

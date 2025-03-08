@@ -24,7 +24,6 @@ def get_vocab_keys(context: Context) -> list:
         timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
         verify=context.verify_tls)
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()

@@ -201,8 +201,7 @@ class Context:
             timeout=CLUEDIN_REQUEST_TIMEOUT_IN_SECONDS,
             verify=self.verify_tls)
 
-        if not response.ok:
-            response.raise_for_status()
+        response.raise_for_status()
 
         response_json = response.json()
 

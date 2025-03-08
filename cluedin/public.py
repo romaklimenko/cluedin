@@ -32,8 +32,7 @@ def post_clue(context: Context, clue: str, content_type: str = 'application/xml'
         verify=context.verify_tls
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.text
 

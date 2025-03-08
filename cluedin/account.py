@@ -32,8 +32,7 @@ def get_users(context: Context, org_id: str = None) -> list:
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 
@@ -59,8 +58,7 @@ def is_organization_available_response(context: Context, org_name: str) -> dict:
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 
@@ -97,8 +95,7 @@ def is_user_available_response(
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 
@@ -204,8 +201,7 @@ def create_organization(
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
 
@@ -263,8 +259,7 @@ def create_user(
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response
 
@@ -322,8 +317,7 @@ def create_admin_user(
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response
 
@@ -354,7 +348,6 @@ def get_user(context: Context, user_id: str = None) -> dict:
         verify=context.verify_tls,
     )
 
-    if not response.ok:
-        response.raise_for_status()
+    response.raise_for_status()
 
     return response.json()
