@@ -1,4 +1,5 @@
 import time
+from itertools import islice
 from typing import Any, Generator
 
 import requests
@@ -30,8 +31,13 @@ def post(
         'Authorization': f'Bearer {context.access_token}'
     }
 
-    for i in range(0, len(collection), batch_size):
-        batch = collection[i:i+batch_size]
+    iterator = iter(collection)
+
+    while True:
+        batch = list(islice(iterator, batch_size))
+        if not batch:  # if the batch is empty, we're done
+            break
+
         response = requests.post(
             url=url,
             json=batch,
