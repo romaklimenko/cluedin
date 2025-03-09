@@ -1,6 +1,6 @@
 # CluedIn
 
-[cluedin](https://pypi.org/project/cluedin/) is a Python client for [CluedIn](https://www.cluedin.com/) API.
+[cluedin](https://pypi.org/project/cluedin/) is a Python SDK for [CluedIn](https://www.cluedin.com/) API.
 
 ## Installation
 
